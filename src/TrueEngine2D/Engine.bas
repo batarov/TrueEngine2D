@@ -20,7 +20,7 @@
 
 #Include "Engine.bi"
 
-#include "WorldSim3d.bi"
+#include "IrrlichtWrapper.bi"
 
 #Include "Config.bi"
 #Include "World.bi"
@@ -48,37 +48,35 @@ Destructor Engine() TRUEENGINE2D_API_EXPORT
 End Destructor
 
 Sub Engine.SetFrameRate(ByVal frameRate As Single) TRUEENGINE2D_API_EXPORT
-	Print "Engine.SetFrameRate"
 	Print m_frameRate
 End Sub
 
 Sub Engine.Init(ByVal w As UInteger, ByVal h As UInteger, ByVal frameRate As Single) TRUEENGINE2D_API_EXPORT
-	Print "Engine.init"
-	wStart( wDT_OPENGL, w, h, wBITS_PER_PIXEL_32, wWINDOWED, wNO_SHADOWS, wCAPTURE_EVENTS, wVERTICAL_SYNC_ON )
+	IrrStart( IRR_EDT_OPENGL, w, h, IRR_BITS_PER_PIXEL_32, IRR_WINDOWED, IRR_NO_SHADOWS, IRR_CAPTURE_EVENTS, IRR_VERTICAL_SYNC_ON )
 	m_frameRate = frameRate
 	m_width = w
 	m_height = h
 End Sub
 
 Sub Engine.StartMainLoop() TRUEENGINE2D_API_EXPORT
-	While wRunning And m_ShutdownRequested <> 1
-		Dim KeyEvent As wKEY_EVENT Ptr
-		If wKeyEventAvailable Then
-    		KeyEvent = wReadKeyEvent
-    		If KeyEvent->direction = wKEY_DOWN Then
+	While IrrRunning And m_ShutdownRequested <> 1
+		Dim KeyEvent As IRR_KEY_EVENT Ptr
+		If IrrKeyEventAvailable Then
+    		KeyEvent = IrrReadKeyEvent
+    		If KeyEvent->direction = IRR_KEY_DOWN Then
     			key_down = KeyEvent->key
     		EndIf
 		EndIf
 		
-		While wMouseEventAvailable
-			Dim ev As wMOUSE_EVENT Ptr = wReadMouseEvent
-			If ev->action = wME_LMOUSE_PRESSED_DOWN _
-				Or ev->action = wME_RMOUSE_PRESSED_DOWN _
-				Or ev->action = wME_MMOUSE_PRESSED_DOWN Then
+		While IrrMouseEventAvailable
+			Dim ev As IRR_MOUSE_EVENT Ptr = IrrReadMouseEvent
+			If ev->action = IRR_EMIE_LMOUSE_PRESSED_DOWN _
+				Or ev->action = IRR_EMIE_RMOUSE_PRESSED_DOWN _
+				Or ev->action = IRR_EMIE_MMOUSE_PRESSED_DOWN Then
 				utils.Input.onMouseDown()
-			ElseIf ev->action = wME_LMOUSE_LEFT_UP _
-				Or ev->action = wME_RMOUSE_LEFT_UP _
-				Or ev->action = wME_MMOUSE_LEFT_UP Then
+			ElseIf ev->action = IRR_EMIE_LMOUSE_LEFT_UP _
+				Or ev->action = IRR_EMIE_RMOUSE_LEFT_UP _
+				Or ev->action = IRR_EMIE_MMOUSE_LEFT_UP Then
 				utils.Input.onMouseUp()
 			EndIf
 		Wend
@@ -87,10 +85,9 @@ Sub Engine.StartMainLoop() TRUEENGINE2D_API_EXPORT
 		
 		utils.Input.Update()
 		
-		wBeginScene( 0,0,0 )
+		IrrBeginScene( 0,0,0 )
 		Render()
-		wEndScene
-		wSetFPS(m_frameRate)
+		IrrEndScene
 	Wend
 End Sub
 
@@ -121,7 +118,7 @@ Function Engine.GetInstance() As Engine Ptr TRUEENGINE2D_API_EXPORT
 End Function
 
 Sub Engine.Destroy() TRUEENGINE2D_API_EXPORT
-	wStop
+	IrrStop
 	Delete m_instance
 	m_instance = 0
 End Sub

@@ -20,7 +20,7 @@
 
 #Pragma once
 
-#Include "vector.bi"
+#Include "Vector.bi"
 Type EntityPtr As Entity ptr
 DECLARE_VECTOR(EntityPtr, EntityPtr)
 

@@ -20,7 +20,7 @@
 
 #Pragma Once
 
-Type Texture As wTexture
+Type Texture As irr_texture
 
 Type Graphic extends object
 	Declare Constructor ()

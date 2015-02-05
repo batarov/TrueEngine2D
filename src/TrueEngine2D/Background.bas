@@ -22,5 +22,5 @@
 #Include "Config.bi"
 
 Sub Background.DrawImage(ByVal x As Integer, ByVal y As Integer) TRUEENGINE2D_API_EXPORT
-	wDraw2DImageElementStretch(*m_tex,0,0,w,h,0,0,w,h,wOFF)
+	IrrDraw2DImageElementStretch(*m_tex, 0, 0, w, h, 0, 0, w, h, IRR_ON)
 End Sub

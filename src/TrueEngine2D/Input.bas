@@ -41,13 +41,13 @@ End Sub
 
 Function utils.Input.getMouseX() As Integer TRUEENGINE2D_API_EXPORT
 	Dim As Integer x, y
-	wGetAbsoluteMousePosition(x, y)
+	IrrGetAbsoluteMousePosition(x, y)
 	Return x
 End Function
 
 Function utils.Input.getMouseY() As Integer TRUEENGINE2D_API_EXPORT
 	Dim As Integer x, y
-	wGetAbsoluteMousePosition(x, y)
+	IrrGetAbsoluteMousePosition(x, y)
 	Return y
 End Function
 

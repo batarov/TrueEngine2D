@@ -37,7 +37,6 @@ Type Sound extends object
 	
 Private:
 	Static m_init As Byte
-	as Integer hWave,hSound
 	m_snd As FSOUND_SAMPLEPtr
 	m_loop As Byte
 End Type

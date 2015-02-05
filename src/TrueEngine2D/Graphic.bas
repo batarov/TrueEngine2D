@@ -22,7 +22,7 @@
 #Include "Config.bi"
 
 Constructor Graphic() TRUEENGINE2D_API_EXPORT
-	m_tex = New wTexture
+	m_tex = New irr_texture
 End Constructor
 
 Destructor Graphic() TRUEENGINE2D_API_EXPORT
@@ -31,11 +31,11 @@ End Destructor
 
 Sub Graphic.Release() TRUEENGINE2D_API_EXPORT
 	If m_tex <> 0 Then
-		wRemoveTexture(Cast(wTexture, *m_tex))
+		IrrRemoveTexture(Cast(irr_texture, *m_tex))
 		Delete m_tex
 	EndIf
 End Sub
 
 Sub Graphic.Load(byval path as zstring Ptr) TRUEENGINE2D_API_EXPORT
-	*m_tex = wGetTexture(path)
+	*m_tex = IrrGetTexture(path)
 End Sub

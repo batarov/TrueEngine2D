@@ -22,5 +22,5 @@
 #include "Config.bi"
 
 Sub Image.DrawImage(ByVal x As Integer, ByVal y As Integer) TRUEENGINE2D_API_EXPORT
-	wDrawSprite( *m_tex, x, y)
+	IrrDraw2DImage(*m_tex, x, y)
 End Sub

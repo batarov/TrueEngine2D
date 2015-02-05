@@ -20,7 +20,7 @@
 
 #Pragma Once
 
-#Include "graphic.bi"
+#Include "Graphic.bi"
 
 Type Background extends Graphic
 	Declare Sub DrawImage(ByVal x As Integer, ByVal y As Integer)
