@@ -20,6 +20,8 @@
 
 #Pragma Once
 
+type KeyEventPtr as IRR_KEY_EVENT Ptr
+
 Namespace utils
 	Type Input extends object
 		Static mouseDown As Byte
@@ -30,14 +32,39 @@ Namespace utils
 		
 		Static mouseReleased As Byte
 		
-		Declare Static Sub onMouseDown()
+		Static lastKey As Integer
 		
-		Declare Static Sub onMouseUp()
+		Declare Static Sub OnMouseDown()
 		
-		Declare Static Function getMouseX() As Integer
+		Declare Static Sub OnMouseUp()
 		
-		Declare Static Function getMouseY() As Integer
+		Declare Static Sub OnKeyDown(ByVal e as KeyEventPtr)
 		
+		Declare Static Sub OnKeyUp(ByVal e as KeyEventPtr)
+		
+		Declare Static Function GetMouseX() As Integer
+		
+		Declare Static Function GetMouseY() As Integer
+		
+		Declare Static Function Check(ByVal key as Integer) As Byte
+		
+		Declare Static Function Pressed(ByVal key as Integer) As Byte
+		
+		Declare Static Function Released(ByVal key as Integer) As Byte
+
 		Declare Static Sub Update()
+		
+		Private:
+			Static m_keyNum as Integer
+			
+			Static m_key(255) as Byte
+			
+			Static m_press(255) as Integer
+			
+			Static m_release(255) as Integer
+			
+			Static m_pressNum as Integer
+			
+			Static m_releaseNum as Integer
 	End Type
 End Namespace

@@ -24,7 +24,7 @@
 Type EntityPtr As Entity ptr
 DECLARE_VECTOR(EntityPtr, EntityPtr)
 
-Type Background_t As Background
+Type BackgroundPtr As Background ptr
 
 Type World extends object
 	
@@ -34,12 +34,12 @@ Type World extends object
 	Declare Function AddEntity(ByVal e As EntityPtr) As EntityPtr
 	Declare virtual Sub Init()
 	
-	Declare Sub SetBackground(byval path as zstring Ptr, ByVal w As Integer, ByVal h As Integer)
+	Declare Sub SetBackground(ByVal bg as BackgroundPtr)
 	
 	Declare Sub Render()
 	visible As Byte
 	
 	m_updateList As VectorEntityPtr
 Private:
-	m_bg As Background_t ptr
+	m_bg As BackgroundPtr
 End Type

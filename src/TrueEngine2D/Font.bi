@@ -18,28 +18,19 @@
 ''
 ''
 
-#Pragma once
+#pragma once
 
-#Include "Vector.bi"
-Type EntityPtr As Entity ptr
-DECLARE_VECTOR(EntityPtr, EntityPtr)
+type FontPrivatePtr as FontPrivate ptr
 
-Type BackgroundPtr As Background ptr
+type Font
+	declare constructor()
+	
+	declare destructor()
 
-Type World extends object
-	
-	Declare Sub Update()
-	Declare virtual Destructor()
-	
-	Declare Function AddEntity(ByVal e As EntityPtr) As EntityPtr
-	Declare virtual Sub Init()
-	
-	Declare Sub SetBackground(ByVal bg as BackgroundPtr)
-	
-	Declare Sub Render()
-	visible As Byte
-	
-	m_updateList As VectorEntityPtr
-Private:
-	m_bg As BackgroundPtr
-End Type
+	declare sub Load(byval path as zstring ptr)
+
+	declare sub DrawText(byval x as integer, byval y as integer, byval width_ as integer, byval height_ as integer, byval text as wstring ptr)
+
+private:
+	m_d as FontPrivatePtr
+end type

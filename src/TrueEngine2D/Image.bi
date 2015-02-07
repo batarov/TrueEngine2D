@@ -23,5 +23,20 @@
 #Include "Graphic.bi"
 
 Type Image extends Graphic
+	Declare Constructor()
+
 	Declare Sub DrawImage(ByVal x As Integer, ByVal y As Integer)
+
+	Declare Sub DrawImage(ByVal x As Integer, ByVal y As Integer, subrectX As Integer, subrectY As Integer, subrectW As Integer, subrectH As Integer)
+	
+	Declare Sub SetAlpha(flag as Byte)
+
+	Declare Sub SetWidth(w as Integer)
+
+	Declare Sub SetHeight(h as Integer)
+
+Protected:
+	m_width as Integer
+	m_height as Integer
+	m_alpha as Byte
 End Type

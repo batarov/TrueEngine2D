@@ -26,22 +26,25 @@ Type Image_t As Image
 
 Constructor Entity() TRUEENGINE2D_API_EXPORT
 	collidable = 1
+	visible = 1
 End Constructor
 
 Destructor Entity () TRUEENGINE2D_API_EXPORT
-	Delete m_image
 End Destructor
 
 Sub Entity.Update () TRUEENGINE2D_API_EXPORT
 End Sub
 
-Sub Entity.Render () TRUEENGINE2D_API_EXPORT
-	If m_image Then m_image->DrawImage(x, y)
+Sub Entity.PreRender () TRUEENGINE2D_API_EXPORT
 End Sub
 
-Sub Entity.SetImage(byval path as zstring Ptr) TRUEENGINE2D_API_EXPORT
-	m_image = New Image_t
-	m_image->Load(path)
+Sub Entity.Render () TRUEENGINE2D_API_EXPORT
+	PreRender()
+	If m_image <> 0 And visible <> 0 Then m_image->DrawImage(x, y)
+	PostRender()
+End Sub
+
+Sub Entity.PostRender () TRUEENGINE2D_API_EXPORT
 End Sub
 
 Sub Entity.SetGraphic(g as GraphicPtr) TRUEENGINE2D_API_EXPORT

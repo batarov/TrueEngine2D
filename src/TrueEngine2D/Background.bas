@@ -22,5 +22,13 @@
 #Include "Config.bi"
 
 Sub Background.DrawImage(ByVal x As Integer, ByVal y As Integer) TRUEENGINE2D_API_EXPORT
-	IrrDraw2DImageElementStretch(*m_tex, 0, 0, w, h, 0, 0, w, h, IRR_ON)
+	IrrDraw2DImageElementStretch(*m_tex, 0, 0, m_width, m_height, 0, 0, m_width, m_height, IRR_ON)
+End Sub
+
+Sub Background.SetWidth(ByVal w As Integer) TRUEENGINE2D_API_EXPORT
+	m_width = w
+End Sub
+
+Sub Background.SetHeight(ByVal h As Integer) TRUEENGINE2D_API_EXPORT
+	m_height = h
 End Sub

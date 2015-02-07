@@ -27,11 +27,9 @@
 DEFINE_VECTOR(EntityPtr, EntityPtr)
 
 Destructor World() TRUEENGINE2D_API_EXPORT
-	Delete m_bg
 End Destructor
 
 Sub World.Init() TRUEENGINE2D_API_EXPORT
-	
 End Sub
 
 Function World.AddEntity(ByVal e As EntityPtr) As EntityPtr TRUEENGINE2D_API_EXPORT
@@ -47,16 +45,12 @@ Sub World.Update() TRUEENGINE2D_API_EXPORT
 End Sub
 
 Sub World.Render() TRUEENGINE2D_API_EXPORT
-	m_bg->DrawImage(0, 0)
+	If m_bg <> 0 Then m_bg->DrawImage(0, 0)
 	For i As Integer = 0 To m_updateList.size() - 1
 		m_updateList.at(i)->Render()
 	Next
 End Sub
 
-Sub World.SetBackground(byval path as zstring Ptr, ByVal w As Integer, ByVal h As Integer) TRUEENGINE2D_API_EXPORT
-	AssertWarn(m_bg=0)
-	m_bg = New Background_t
-	m_bg->w = w
-	m_bg->h = h
-	m_bg->Load(path)
+Sub World.SetBackground(ByVal bg as BackgroundPtr) TRUEENGINE2D_API_EXPORT
+	m_bg = bg
 End Sub

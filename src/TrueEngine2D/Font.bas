@@ -18,28 +18,25 @@
 ''
 ''
 
-#Pragma once
 
-#Include "Vector.bi"
-Type EntityPtr As Entity ptr
-DECLARE_VECTOR(EntityPtr, EntityPtr)
+#include "Font.bi"
 
-Type BackgroundPtr As Background ptr
+type FontPrivate
+	fnt as irr_font
+end type
 
-Type World extends object
-	
-	Declare Sub Update()
-	Declare virtual Destructor()
-	
-	Declare Function AddEntity(ByVal e As EntityPtr) As EntityPtr
-	Declare virtual Sub Init()
-	
-	Declare Sub SetBackground(ByVal bg as BackgroundPtr)
-	
-	Declare Sub Render()
-	visible As Byte
-	
-	m_updateList As VectorEntityPtr
-Private:
-	m_bg As BackgroundPtr
-End Type
+constructor Font() TRUEENGINE2D_API_EXPORT
+	m_d = new FontPrivate
+end constructor
+
+destructor Font() TRUEENGINE2D_API_EXPORT
+	delete m_d
+end destructor
+
+sub Font.Load(byval path as zstring ptr) TRUEENGINE2D_API_EXPORT
+	m_d->fnt =  IrrGetFont(path)
+end sub
+
+sub Font.DrawText(byval x as integer, byval y as integer, byval width_ as integer, byval height_ as integer, byval text as wstring ptr) TRUEENGINE2D_API_EXPORT
+	Irr2DFontDraw(m_d->fnt, text, x, y, x + width_, y + height_)
+end sub

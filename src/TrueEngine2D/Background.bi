@@ -24,5 +24,11 @@
 
 Type Background extends Graphic
 	Declare Sub DrawImage(ByVal x As Integer, ByVal y As Integer)
-	As Integer w, h
+
+	Declare Sub setWidth(ByVal w As Integer)
+
+	Declare Sub setHeight(ByVal h As Integer)
+
+Private:
+	As Integer m_width, m_height
 End Type

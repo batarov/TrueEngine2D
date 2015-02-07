@@ -29,16 +29,6 @@
 
 Dim Engine.m_instance As Engine Ptr = 0
 
-Dim Shared key_down As UInteger
-
-Function keyboard_check_pressed(key As uinteger) As Byte TRUEENGINE2D_API_EXPORT
-	If key <> key_down Then
-		Return 0
-	Else
-		Return 1
-	EndIf
-End Function
-
 Constructor Engine() TRUEENGINE2D_API_EXPORT
 	m_world = New World
 End Constructor
@@ -60,24 +50,25 @@ End Sub
 
 Sub Engine.StartMainLoop() TRUEENGINE2D_API_EXPORT
 	While IrrRunning And m_ShutdownRequested <> 1
-		Dim KeyEvent As IRR_KEY_EVENT Ptr
-		If IrrKeyEventAvailable Then
-    		KeyEvent = IrrReadKeyEvent
-    		If KeyEvent->direction = IRR_KEY_DOWN Then
-    			key_down = KeyEvent->key
-    		EndIf
-		EndIf
+		While IrrKeyEventAvailable
+				Dim KeyEvent As IRR_KEY_EVENT Ptr = IrrReadKeyEvent
+    			If KeyEvent->direction = IRR_KEY_DOWN Then
+					utils.Input.OnKeyDown(KeyEvent)
+    			ElseIf KeyEvent->direction = IRR_KEY_UP Then
+					utils.Input.OnKeyUp(KeyEvent)
+    			EndIf
+		Wend
 		
 		While IrrMouseEventAvailable
 			Dim ev As IRR_MOUSE_EVENT Ptr = IrrReadMouseEvent
 			If ev->action = IRR_EMIE_LMOUSE_PRESSED_DOWN _
 				Or ev->action = IRR_EMIE_RMOUSE_PRESSED_DOWN _
 				Or ev->action = IRR_EMIE_MMOUSE_PRESSED_DOWN Then
-				utils.Input.onMouseDown()
+				utils.Input.OnMouseDown()
 			ElseIf ev->action = IRR_EMIE_LMOUSE_LEFT_UP _
 				Or ev->action = IRR_EMIE_RMOUSE_LEFT_UP _
 				Or ev->action = IRR_EMIE_MMOUSE_LEFT_UP Then
-				utils.Input.onMouseUp()
+				utils.Input.OnMouseUp()
 			EndIf
 		Wend
 		
@@ -97,6 +88,7 @@ End Sub
 
 Sub Engine.Update() TRUEENGINE2D_API_EXPORT
 	m_world->Update()
+	if m_goto <> 0 then CheckWorld()
 End Sub
 
 Sub Engine.Render() TRUEENGINE2D_API_EXPORT
@@ -104,13 +96,16 @@ Sub Engine.Render() TRUEENGINE2D_API_EXPORT
 End Sub
 
 Sub Engine.CheckWorld() TRUEENGINE2D_API_EXPORT
-	
+	delete m_world
+	m_world = m_goto
+	m_goto = 0
+	m_world->Init()	
 End Sub
 
-Sub Engine.AddWorld(world As World Ptr) TRUEENGINE2D_API_EXPORT
-	m_world = world
-	m_world->Init()
-End Sub
+Function Engine.AddWorld(world As World Ptr) as WorldPtr TRUEENGINE2D_API_EXPORT
+	m_goto = world 
+	return world
+End Function
 
 Function Engine.GetInstance() As Engine Ptr TRUEENGINE2D_API_EXPORT
 	If m_instance = 0 Then m_instance = New Engine()
@@ -127,3 +122,4 @@ End Sub
 #include "Graphic.bas"
 #include "Image.bas"
 #include "Background.bas"
+#include "Font.bas"

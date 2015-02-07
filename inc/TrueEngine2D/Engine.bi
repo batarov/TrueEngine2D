@@ -47,8 +47,8 @@ Type Engine Extends Object
 	
 	Declare Sub StopMainLoop()
 	
-	Declare Sub AddWorld(world As WorldPtr)
-	
+	Declare Function AddWorld(world As WorldPtr) as WorldPtr
+		
 	Declare Sub SetFrameRate(ByVal frameRate As single)
 
 Private:	
@@ -64,9 +64,8 @@ Protected:
 	m_height As UInteger
 	m_frameRate As Single
 	m_world As WorldPtr
+	m_goto As WorldPtr
 	m_ShutdownRequested As Byte
 End Type
 
 #define GE Engine.GetInstance()
-
-Declare Function keyboard_check_pressed(key As uinteger) As byte

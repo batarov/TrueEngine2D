@@ -54,9 +54,11 @@ Type Entity extends object
 	
 	Declare Virtual Sub Update ()
 	
-	Declare Sub Render ()
-	
-	Declare Sub SetImage(byval path as zstring Ptr)
+	Declare virtual Sub PreRender ()
+
+	Declare virtual Sub Render ()
+
+	Declare virtual Sub PostRender ()
 	
 	Declare Sub SetGraphic(g as GraphicPtr)
 	
@@ -70,8 +72,7 @@ Type Entity extends object
 	
 	Declare Sub MoveBy(x_ As Single, y_ As Single)
 	
-Private:
-
+Protected:
 	m_image As GraphicPtr
 	m_type As String
 	m_world As WorldPtr

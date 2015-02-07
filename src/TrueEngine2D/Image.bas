@@ -21,6 +21,29 @@
 #Include "Image.bi"
 #include "Config.bi"
 
+Constructor Image() TRUEENGINE2D_API_EXPORT
+	base()
+	m_alpha = 1
+	m_width = -1
+	m_height = -1
+End Constructor
+
 Sub Image.DrawImage(ByVal x As Integer, ByVal y As Integer) TRUEENGINE2D_API_EXPORT
-	IrrDraw2DImage(*m_tex, x, y)
+	DrawImage(x, y, 0, 0, m_width, m_height)
+End Sub
+
+Sub Image.DrawImage(ByVal x As Integer, ByVal y As Integer, subrectX As Integer, subrectY As Integer, subrectW As Integer, subrectH As Integer) TRUEENGINE2D_API_EXPORT
+	IrrDraw2DImageElement(*m_tex, x, y, subrectX, subrectY, subrectX + subrectW, subrectY + subrectH, m_alpha)
+End Sub
+
+Sub Image.SetWidth(w as Integer) TRUEENGINE2D_API_EXPORT
+	m_width = w
+End Sub
+
+Sub Image.SetHeight(h as Integer) TRUEENGINE2D_API_EXPORT
+	m_height = h
+End Sub
+
+Sub Image.SetAlpha(flag as Byte) TRUEENGINE2D_API_EXPORT
+	m_alpha = flag
 End Sub
