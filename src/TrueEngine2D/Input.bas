@@ -35,9 +35,9 @@ Dim utils.Input.m_releaseNum as Integer = 0
 
 Sub utils.Input.OnMouseDown() TRUEENGINE2D_API_EXPORT
 	if mouseDown = 0 Then
-       mouseDown = 1
-       mouseUp = 0
-       mousePressed = 1
+		mouseDown = 1
+		mouseUp = 0
+		mousePressed = 1
 	EndIf      
 End Sub
 
@@ -47,12 +47,12 @@ Sub utils.Input.OnMouseUp() TRUEENGINE2D_API_EXPORT
 	mouseReleased = 1
 End Sub
 
-Sub utils.Input.OnKeyDown(e as KeyEventPtr) TRUEENGINE2D_API_EXPORT
+Sub utils.Input.OnKeyDown(e as KeyEventPtr) TRUEENGINE2D_API_EXPORT	' get the keycode
 	' get the keycode
 	lastKey = e->key
 	Dim code as Integer = lastKey
 	if (code < 0 Or code > 255) then return
-	if (not m_key(code)) then
+	if (m_key(code) = 0) then
 		m_key(code) = 1
 		m_keyNum += 1
 		m_press(m_pressNum) = code
@@ -63,9 +63,8 @@ End Sub
 Sub utils.Input.OnKeyUp(e as KeyEventPtr) TRUEENGINE2D_API_EXPORT
 	' get the keycode
 	Dim code as Integer = e->key			
-	if (code < 0 Or code > 255) then return
-			
-	if (m_key(code)) then
+	if (code < 0 Or code > 255) then return			
+	if (m_key(code) <> 0) then
 		m_key(code) = 0
 		m_keyNum -= 1
 		m_release(m_releaseNum) = code
