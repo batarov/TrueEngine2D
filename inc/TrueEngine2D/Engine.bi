@@ -25,6 +25,16 @@
 Type WorldPtr As World ptr
 
 Type Engine Extends Object
+	'
+	' If the game should stop updating/rendering.
+	'
+	paused As Byte = 0
+	
+	'
+	' The max amount of frames that can be skipped in fixed framerate mode.
+	'
+	maxFrameSkip As UInteger = 5
+	
 	Declare Virtual Destructor ()
 	
 	Declare Static Function GetInstance() As Engine Ptr
@@ -48,6 +58,8 @@ Type Engine Extends Object
 	Declare Sub StopMainLoop()
 	
 	Declare Function AddWorld(world As WorldPtr) as WorldPtr
+	
+	Declare Function GetWorld() As WorldPtr
 		
 	Declare Sub SetFrameRate(ByVal frameRate As single)
 
@@ -66,6 +78,15 @@ Protected:
 	m_world As WorldPtr
 	m_goto As WorldPtr
 	m_ShutdownRequested As Byte
+	
+Private:
+	' Timing information.
+	m_delta As Single = 0
+	m_time As Single
+	m_last As Single
+	m_prev As Single
+	m_rate As Single
+	m_skip As Single
 End Type
 
 #define GE Engine.GetInstance()

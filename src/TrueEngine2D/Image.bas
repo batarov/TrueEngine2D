@@ -36,6 +36,10 @@ Sub Image.DrawImage(ByVal x As Integer, ByVal y As Integer, subrectX As Integer,
 	IrrDraw2DImageElement(*m_tex, x, y, subrectX, subrectY, subrectX + subrectW, subrectY + subrectH, m_alpha)
 End Sub
 
+Sub Image.DrawImage(ByVal x As Integer, ByVal y As Integer, scaleX As Single, scaleY As Single) TRUEENGINE2D_API_EXPORT
+	IrrDraw2DImageElementStretch(*m_tex, x, y, x + m_width * scaleX, y + m_height * scaleY, 0, 0, m_width, m_height, m_alpha)
+End Sub
+
 Sub Image.SetWidth(w as Integer) TRUEENGINE2D_API_EXPORT
 	m_width = w
 End Sub

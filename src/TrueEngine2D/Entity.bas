@@ -25,8 +25,7 @@
 Type Image_t As Image
 
 Constructor Entity() TRUEENGINE2D_API_EXPORT
-	collidable = 1
-	visible = 1
+
 End Constructor
 
 Destructor Entity () TRUEENGINE2D_API_EXPORT
@@ -40,7 +39,7 @@ End Sub
 
 Sub Entity.Render () TRUEENGINE2D_API_EXPORT
 	PreRender()
-	If m_image <> 0 And visible <> 0 Then m_image->DrawImage(x, y)
+	If m_graphic <> 0 And visible <> 0 Then m_graphic->DrawImage(x, y)
 	PostRender()
 End Sub
 
@@ -48,7 +47,7 @@ Sub Entity.PostRender () TRUEENGINE2D_API_EXPORT
 End Sub
 
 Sub Entity.SetGraphic(g as GraphicPtr) TRUEENGINE2D_API_EXPORT
-	m_image = g
+	m_graphic = g
 End Sub
 
 Sub Entity.SetType(ByRef value As string) TRUEENGINE2D_API_EXPORT
@@ -62,17 +61,27 @@ End Sub
 Function Entity.Collide(ByRef type_ As String, ByVal x_ As Single, ByVal y_ As Single) As Entity Ptr TRUEENGINE2D_API_EXPORT
 	If m_world = 0 Then Return 0
 	
-	For i As Integer = 0 To m_world->m_updateList.size()-1
-		Dim As EntityPtr e = m_world->m_updateList.at(i)
-		If e <> @this And e->m_type = type_ _ 
-			And x_ + hitboxWidth > e->x _
-			And y_ + hitboxHeight > e->y _
-			And x_ < e->x + e->hitboxWidth _
-			And y_ < e->y + e->hitboxHeight Then
-				Return e
-		EndIf
-	Next
+	Dim As EntityPtr e = m_world->m_typeFirst.value(type_, 0)
+	If e = 0 Then Return 0
+	m_x = x
+	m_y = y
+	x = x_
+	y = y_
 	
+	While e <> 0
+		If e->collidable <> 0 And e <> @This _ 
+			And x_ - originX + hitboxWidth > e->x - e->originX _
+			And y_ - originY + hitboxHeight > e->y - e->originY _
+			And x_ - originX < e->x - originX + e->hitboxWidth _
+			And y_ - originY < e->y - originY + e->hitboxHeight Then
+			x = m_x
+			y = m_y
+			Return e
+		EndIf
+		e = e->m_typeNext
+	Wend		
+	x = m_x
+	y = m_y
 	Return 0	
 End Function
 
@@ -80,12 +89,23 @@ Function Entity.CollidePoint(x_ As Single, y_ As Single, pX As Single, pY As Sin
 	If pX >= x_ - originX And pY >= y_ - originY _
 		And pX < x_ - originX + hitboxWidth And pY < y_ - originY + hitboxHeight Then
 		Return 1
-	EndIf
-	
+	EndIf	
 	Return 0
 End Function
 
 Sub Entity.MoveBy(x_ As Single, y_ As Single) TRUEENGINE2D_API_EXPORT
+	m_moveX += x_
+	m_moveY += y_
+ 	x_ = iif(m_moveX >=0, fix(m_moveX + 0.5), fix(m_moveX - 0.5))
+ 	y_ = iif(m_moveY >=0, fix(m_moveY + 0.5), fix(m_moveY - 0.5))
+ 	m_moveX -= x_
+ 	m_moveY -= y_
 	x += x_
 	y += y_
+End Sub
+
+Sub Entity.Added() TRUEENGINE2D_API_EXPORT
+End Sub
+
+Sub Entity.Removed() TRUEENGINE2D_API_EXPORT
 End Sub

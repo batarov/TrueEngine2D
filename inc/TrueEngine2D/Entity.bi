@@ -25,16 +25,16 @@ Type WorldPtr As World ptr
 
 Type Entity extends object
 	' X position of the Entity in the World.
-	x As Single
+	x As Single = 0
 	
 	' Y position of the Entity in the World.	
-	y As Single
+	y As Single = 0
 	
 	' If the Entity should render.
-	visible As Byte
+	visible As Byte = 1
 	
 	' If the Entity should respond to collision checks.
-	collidable As byte
+	collidable As Byte = 1
 	
 	' Width of the Entity's hitbox.
 	hitboxWidth As Integer
@@ -72,9 +72,37 @@ Type Entity extends object
 	
 	Declare Sub MoveBy(x_ As Single, y_ As Single)
 	
-Protected:
-	m_image As GraphicPtr
-	m_type As String
-	m_world As WorldPtr
-End Type
+	'
+	'	Override this, called when the Entity is added to a World.
+	'
+	Declare Virtual Sub Added()
+	
+	'
+	' Override this, called when the Entity is removed from a World.
+	'
+	Declare Virtual Sub Removed()
+  
+Public:
+' Entity information.
+/' Internal '/ m_world As WorldPtr
+/' Internal '/ m_type As String
+/' Internal '/ m_name As String
+/' Internal '/ m_layer As Integer
+/' Internal '/	m_updatePrev As Entity Ptr
+/' Internal '/	m_updateNext As Entity Ptr
+/' Internal '/	m_renderPrev As Entity Ptr
+/' Internal '/	m_renderNext As Entity Ptr
+/' Internal '/	m_typePrev As Entity Ptr
+/' Internal '/	m_typeNext As Entity Ptr
+/' Internal '/	m_recycleNext As Entity Ptr
 
+Private:
+' Collision information.
+	m_x as Single
+	m_y as Single
+	m_moveX as Single = 0
+	m_moveY as Single = 0
+
+' Rendering information.	
+/' Internal '/ Public: m_graphic As GraphicPtr
+End Type

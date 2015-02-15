@@ -38,17 +38,30 @@ Destructor Engine() TRUEENGINE2D_API_EXPORT
 End Destructor
 
 Sub Engine.SetFrameRate(ByVal frameRate As Single) TRUEENGINE2D_API_EXPORT
-	Print m_frameRate
+	m_frameRate = frameRate
 End Sub
 
 Sub Engine.Init(ByVal w As UInteger, ByVal h As UInteger, ByVal frameRate As Single) TRUEENGINE2D_API_EXPORT
-	IrrStart( IRR_EDT_OPENGL, w, h, IRR_BITS_PER_PIXEL_32, IRR_WINDOWED, IRR_NO_SHADOWS, IRR_CAPTURE_EVENTS, IRR_VERTICAL_SYNC_ON )
+	IrrStart(IRR_EDT_OPENGL, w, h, IRR_BITS_PER_PIXEL_16, IRR_WINDOWED, IRR_NO_SHADOWS, IRR_CAPTURE_EVENTS, IRR_VERTICAL_SYNC_ON)
 	m_frameRate = frameRate
 	m_width = w
 	m_height = h
 End Sub
 
 Sub Engine.StartMainLoop() TRUEENGINE2D_API_EXPORT
+	' switch worlds
+	if m_goto <> 0 Then CheckWorld()
+	
+	' fixed framerate
+	m_rate = 1000 / m_frameRate
+	m_skip = m_rate * (maxFrameSkip + 1)
+	m_last = IrrGetTime()
+	m_prev = m_last
+	
+	Dim As Integer dt, t0
+	Dim As Single fTime, fDeltaTime
+	t0 = IrrGetTime()
+	fTime = 0
 	While IrrRunning And m_ShutdownRequested <> 1
 		While IrrKeyEventAvailable
 				Dim KeyEvent As IRR_KEY_EVENT Ptr = IrrReadKeyEvent
@@ -72,13 +85,35 @@ Sub Engine.StartMainLoop() TRUEENGINE2D_API_EXPORT
 			EndIf
 		Wend
 		
-		Update()
+		' update Timer
+		m_time = IrrGetTime()
+		m_delta += (m_time - m_last)
+		m_last = m_time
+		If m_delta < m_rate Then Continue While
+
+		' update loop
+		If m_delta > m_skip then m_delta = m_skip
+		While m_delta >= m_rate
+			'update timer
+			m_delta -= m_rate
+			m_prev = m_time
+			
+			' update loop
+			if paused = 0 Then Update()
+			
+			' update input
+			utils.Input.Update()
+			
+			' update timer
+ 			m_time = IrrGetTime()
+		Wend				
 		
-		utils.Input.Update()
-		
-		IrrBeginScene( 0,0,0 )
-		Render()
-		IrrEndScene
+		' render loop
+		if paused = 0 Then
+			IrrBeginScene( 0,0,0 )
+			Render()
+			IrrEndScene
+		EndIf
 	Wend
 End Sub
 
@@ -87,8 +122,10 @@ Sub Engine.StopMainLoop() TRUEENGINE2D_API_EXPORT
 End Sub
 
 Sub Engine.Update() TRUEENGINE2D_API_EXPORT
-	m_world->Update()
-	if m_goto <> 0 then CheckWorld()
+	m_world->UpdateLists()
+ 	if m_goto <> 0 Then CheckWorld()
+   m_world->Update()
+   m_world->UpdateLists(0)
 End Sub
 
 Sub Engine.Render() TRUEENGINE2D_API_EXPORT
@@ -96,10 +133,14 @@ Sub Engine.Render() TRUEENGINE2D_API_EXPORT
 End Sub
 
 Sub Engine.CheckWorld() TRUEENGINE2D_API_EXPORT
-	delete m_world
+	If m_goto = 0 Then Return
+	m_world->EndWorld()
+	m_world->UpdateLists() 
 	m_world = m_goto
 	m_goto = 0
-	m_world->Init()	
+	m_world->UpdateLists()
+	m_world->BeginWorld()
+	m_world->UpdateLists()	
 End Sub
 
 Function Engine.AddWorld(world As World Ptr) as WorldPtr TRUEENGINE2D_API_EXPORT
@@ -117,6 +158,10 @@ Sub Engine.Destroy() TRUEENGINE2D_API_EXPORT
 	Delete m_instance
 	m_instance = 0
 End Sub
+
+Function Engine.GetWorld() As WorldPtr TRUEENGINE2D_API_EXPORT
+	Return m_world
+End Function
 
 #include "Input.bas"
 #include "Graphic.bas"

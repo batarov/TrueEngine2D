@@ -39,3 +39,6 @@ End Sub
 Sub Graphic.Load(byval path as zstring Ptr) TRUEENGINE2D_API_EXPORT
 	*m_tex = IrrGetTexture(path)
 End Sub
+
+Sub Graphic.Update() TRUEENGINE2D_API_EXPORT
+End Sub

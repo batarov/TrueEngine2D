@@ -52,7 +52,7 @@ Sub utils.Input.OnKeyDown(e as KeyEventPtr) TRUEENGINE2D_API_EXPORT	' get the ke
 	lastKey = e->key
 	Dim code as Integer = lastKey
 	if (code < 0 Or code > 255) then return
-	if (m_key(code) = 0) then
+	if (m_key(code) = 0) Then
 		m_key(code) = 1
 		m_keyNum += 1
 		m_press(m_pressNum) = code

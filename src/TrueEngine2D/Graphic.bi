@@ -23,12 +23,22 @@
 Type Texture As irr_texture
 
 Type Graphic extends object
+	'
+ 	' If the graphic should update.
+ 	'
+ 	active As Byte = 0
+ 	
 	Declare Constructor ()
 	Declare virtual Destructor ()
 	Declare Sub Load(byval path as zstring Ptr)
 	Declare Sub Release()
 	
 	Declare abstract Sub DrawImage(ByVal x As Integer, ByVal y As Integer)
+	
+	'
+ 	' Updates the graphic.
+ 	'
+	Declare Virtual Sub Update()
 	
 Protected:
 	m_tex As Texture Ptr

@@ -17,29 +17,32 @@
 '' along with TrueEngine2D.  If not, see <http://www.gnu.org/licenses/>.
 ''
 ''
-
 #Pragma Once
 
-Type Texture As irr_texture
+#Macro DECLARE_PAIR(N_, T1_, T2_)
+Type Pair##N_
+	Declare Constructor()
+	
+	Declare Constructor(ByRef value1 As Const T1_, ByRef value2 As Const T2_)
 
-Type Graphic extends object
-	'
- 	' If the graphic should update.
- 	'
- 	active As Byte = 0
- 	
-	Declare Constructor ()
-	Declare virtual Destructor ()
-	Declare Sub Load(byval path as zstring Ptr)
-	Declare Sub Release()
-	
-	Declare abstract Sub DrawImage(ByVal x As Integer, ByVal y As Integer)
-	
-	'
- 	' Updates the graphic.
- 	'
-	Declare Virtual Sub Update()
-	
-Protected:
-	m_tex As Texture Ptr
+	first As T1_
+	second As T2_
 End Type
+
+Declare Operator = (ByRef lhs As Pair##N_, ByRef rhs As Pair##N_) As Integer
+#EndMacro
+
+#Macro DEFINE_PAIR(N_, T1_, T2_)
+Constructor Pair##N_() TRUEENGINE2D_API_EXPORT
+End Constructor
+
+Constructor Pair##N_(ByRef value1 As Const T1_, ByRef value2 As Const T2_) TRUEENGINE2D_API_EXPORT
+	first = value1
+	second = value2
+End Constructor
+
+Operator = (ByRef lhs As Pair##N_, ByRef rhs As Pair##N_) As Integer TRUEENGINE2D_API_EXPORT
+	If lhs.first = rhs.first AndAlso lhs.second = rhs.second Then Return 1
+	Return 0 
+End Operator
+#EndMacro
