@@ -28,6 +28,10 @@ Constructor Image() TRUEENGINE2D_API_EXPORT
 	m_height = -1
 End Constructor
 
+Sub Image.Render(ByVal x As Integer, ByVal y As Integer) TRUEENGINE2D_API_EXPORT
+	DrawImage(x, y)
+End Sub
+
 Sub Image.DrawImage(ByVal x As Integer, ByVal y As Integer) TRUEENGINE2D_API_EXPORT
 	DrawImage(x, y, 0, 0, m_width, m_height)
 End Sub

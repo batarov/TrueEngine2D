@@ -39,7 +39,7 @@ End Sub
 
 Sub Entity.Render () TRUEENGINE2D_API_EXPORT
 	PreRender()
-	If m_graphic <> 0 And visible <> 0 Then m_graphic->DrawImage(x, y)
+	If m_graphic <> 0 And visible <> 0 Then m_graphic->Render(x, y)
 	PostRender()
 End Sub
 

@@ -29,16 +29,24 @@ Type Graphic extends object
  	active As Byte = 0
  	
 	Declare Constructor ()
-	Declare virtual Destructor ()
-	Declare Sub Load(byval path as zstring Ptr)
-	Declare Sub Release()
 	
-	Declare abstract Sub DrawImage(ByVal x As Integer, ByVal y As Integer)
+	Declare Virtual Destructor ()
+	
+	Declare Sub Load(byval path as zstring Ptr)
+	
+	Declare Sub Release()
 	
 	'
  	' Updates the graphic.
  	'
 	Declare Virtual Sub Update()
+	
+	'
+	' Renders the graphic to the screen.
+	' @param		x		position to draw the graphic.
+	' @param		y		position to draw the graphic.
+	'
+	Declare Virtual Sub Render(ByVal x As Integer, ByVal y As Integer)
 	
 Protected:
 	m_tex As Texture Ptr

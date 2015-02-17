@@ -28,6 +28,8 @@ Type Background extends Graphic
 	Declare Sub setWidth(ByVal w As Integer)
 
 	Declare Sub setHeight(ByVal h As Integer)
+	
+	Declare Sub Render(ByVal x As Integer, ByVal y As Integer)
 
 Private:
 	As Integer m_width, m_height

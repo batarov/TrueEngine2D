@@ -51,13 +51,13 @@ Sub World.Update() TRUEENGINE2D_API_EXPORT
 	Dim e As EntityPtr = m_updateFirst
 	While e <> 0
 		e->Update()
-		If e->m_graphic <> 0 AndAlso e->m_graphic->active Then e->m_graphic->Update()
+		If e->m_graphic <> 0 AndAlso e->m_graphic->active = 1 Then e->m_graphic->Update()
 		e = e->m_updateNext
 	Wend
 End Sub
 
 Sub World.Render() TRUEENGINE2D_API_EXPORT
-	If m_bg <> 0 Then m_bg->DrawImage(0, 0)
+	If m_bg <> 0 Then m_bg->Render(0, 0)
 	
 	' sort the depth list
 	if m_layerSort <> 0 Then 
@@ -70,10 +70,10 @@ Sub World.Render() TRUEENGINE2D_API_EXPORT
 	While i <> 0
 		i -= 1
 		e = m_renderLast.at(m_layerList.at(i))
-      While e <> 0
-      	if e->visible Then e->Render()
-         e = e->m_renderPrev
-      Wend
+		While e <> 0
+			if e->visible <> 0 Then e->Render()
+		   e = e->m_renderPrev
+		Wend
 	Wend
 End Sub
 

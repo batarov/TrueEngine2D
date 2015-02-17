@@ -24,7 +24,9 @@
 
 Type Image extends Graphic
 	Declare Constructor()
-
+	
+	Declare Virtual Sub Render(ByVal x As Integer, ByVal y As Integer)
+	
 	Declare Sub DrawImage(ByVal x As Integer, ByVal y As Integer)
 
 	Declare Sub DrawImage(ByVal x As Integer, ByVal y As Integer, subrectX As Integer, subrectY As Integer, subrectW As Integer, subrectH As Integer)

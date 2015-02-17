@@ -32,3 +32,7 @@ End Sub
 Sub Background.SetHeight(ByVal h As Integer) TRUEENGINE2D_API_EXPORT
 	m_height = h
 End Sub
+
+Sub Background.Render(ByVal x As Integer, ByVal y As Integer) TRUEENGINE2D_API_EXPORT
+	DrawImage(x, y)
+End Sub

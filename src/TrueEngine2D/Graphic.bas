@@ -42,3 +42,6 @@ End Sub
 
 Sub Graphic.Update() TRUEENGINE2D_API_EXPORT
 End Sub
+
+Sub Graphic.Render(ByVal x As Integer, ByVal y As Integer) TRUEENGINE2D_API_EXPORT
+End Sub
