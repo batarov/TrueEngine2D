@@ -168,3 +168,4 @@ End Function
 #include "Image.bas"
 #include "Background.bas"
 #include "Font.bas"
+#Include "Draw.bas"

@@ -48,6 +48,6 @@ Type Graphic extends object
 	'
 	Declare Virtual Sub Render(ByVal x As Integer, ByVal y As Integer)
 	
-Protected:
-	m_tex As Texture Ptr
+Public:
+	/' Internal '/ m_tex As Texture Ptr
 End Type

@@ -17,34 +17,12 @@
 '' along with TrueEngine2D.  If not, see <http://www.gnu.org/licenses/>.
 ''
 ''
+#Pragma Once
 
-#Include "Image.bi"
-#include "Config.bi"
-#Include "Draw.bi"
+Type GraphicPtr As Graphic Ptr
 
-Constructor Image() TRUEENGINE2D_API_EXPORT
-	base()
-	m_alpha = 1
-	m_width = -1
-	m_height = -1
-End Constructor
-
-Sub Image.Render(ByVal x As Integer, ByVal y As Integer) TRUEENGINE2D_API_EXPORT
-	Var sx = scaleX * scale
-	Var sy = scaleY * scale
-	Dim xx As Integer = x - originX * sx
-	Dim yy As Integer = y - originY * sy
-	utils.Draw.Graphic(xx, yy, m_width * sx, m_height * sy, @This, 0, 0, m_width, m_height, m_alpha)
-End Sub
-
-Sub Image.SetWidth(w as Integer) TRUEENGINE2D_API_EXPORT
-	m_width = w
-End Sub
-
-Sub Image.SetHeight(h as Integer) TRUEENGINE2D_API_EXPORT
-	m_height = h
-End Sub
-
-Sub Image.SetAlpha(flag as Byte) TRUEENGINE2D_API_EXPORT
-	m_alpha = flag
-End Sub
+Namespace utils
+	Type Draw extends Object
+		Declare Static Sub Graphic(ByVal x As Integer, ByVal y As Integer, ByVal w As Integer, ByVal h As Integer, g As GraphicPtr, ByVal sx As Integer, ByVal sy As Integer, ByVal sw As Integer, ByVal sw As Integer, ByVal useAlpha As Byte = 1)
+	End Type
+End Namespace

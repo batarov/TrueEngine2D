@@ -23,15 +23,35 @@
 #Include "Graphic.bi"
 
 Type Image extends Graphic
+	'
+	' Scale of the image, affects both x and y scale.
+	'
+	scale As Single = 1
+
+	'
+	' X scale of the image.
+	'
+	scaleX As Single = 1
+	
+	'
+	' Y scale of the image.
+	'
+	scaleY As Single = 1
+	
+	'
+	' X origin of the image, determines transformation point.
+	' Defaults to top-left corner.
+	'
+	originX As Integer = 0
+	
+	' Y origin of the image, determines transformation point.
+	' Defaults to top-left corner.
+	'
+	originY As Integer = 0
+	
 	Declare Constructor()
 	
 	Declare Virtual Sub Render(ByVal x As Integer, ByVal y As Integer)
-	
-	Declare Sub DrawImage(ByVal x As Integer, ByVal y As Integer)
-
-	Declare Sub DrawImage(ByVal x As Integer, ByVal y As Integer, subrectX As Integer, subrectY As Integer, subrectW As Integer, subrectH As Integer)
-	
-	Declare Sub DrawImage(ByVal x As Integer, ByVal y As Integer, scaleX As Single, scaleY As Single)
 	
 	Declare Sub SetAlpha(flag as Byte)
 
@@ -42,5 +62,5 @@ Type Image extends Graphic
 Protected:
 	m_width as Integer
 	m_height as Integer
-	m_alpha as Byte
+	m_alpha as Byte = 1
 End Type
