@@ -21,6 +21,7 @@
 #Pragma Once
 
 Type FSOUND_SAMPLEPtr As FSOUND_SAMPLE Ptr
+Type FSOUND_STREAMPtr As FSOUND_STREAM Ptr
 
 Type Sound extends object
 	Declare Constructor()
@@ -37,6 +38,10 @@ Type Sound extends object
 	
 Private:
 	Static m_init As Byte
-	m_snd As FSOUND_SAMPLEPtr
+	Union
+		m_sample As FSOUND_SAMPLEPtr
+		m_stream As FSOUND_STREAMPtr
+	End Union
 	m_loop As Byte
+	m_streaming As Byte = 0
 End Type

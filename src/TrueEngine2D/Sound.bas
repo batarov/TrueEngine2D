@@ -41,26 +41,57 @@ Destructor Sound() TRUEENGINE2D_API_EXPORT
 	
 End Destructor
 
-Function Sound.Load(byval Filename as String) As Byte export
-	m_snd = FSOUND_Sample_Load(FSOUND_FREE, Filename, 0, 0, 0)
-	If m_snd = 0 Then
-		Print "FMOD could not load '" & Filename & "'"
-		Return 0 
-	EndIf
+Function Sound.Load(byval Filename as String) As Byte Export
+	Var ext = LCase(Right(Filename, 4))
+	If ext = ".wav" Then 
+		m_sample = FSOUND_Sample_Load(FSOUND_FREE, Filename, 0, 0, 0)
+		If m_sample = 0 Then
+			Print "FMOD could not load '" & Filename & "'"
+			Return 0 
+		EndIf
+	ElseIf ext = ".ogg" OrElse ext = ".mp3" Then
+		m_stream = FSOUND_Stream_Open(Filename, 0, 0, 0)
+		m_streaming = 1
+		If m_stream = 0 Then
+			Print "FMOD could not load '" & Filename & "'"
+			Return 0 
+		EndIf
+	EndIf	
 	
 	Return 1
 End Function
 
 Sub Sound.Release() TRUEENGINE2D_API_EXPORT
-	FSOUND_Sample_Free(m_snd)
-	m_snd = 0
+	If m_streaming = 1 Then
+		FSOUND_Stream_Close(m_stream)
+		m_stream = 0
+	Else
+		FSOUND_Sample_Free(m_sample)
+		m_sample = 0
+	EndIf
 End Sub
 
 Sub Sound.Play() TRUEENGINE2D_API_EXPORT
-	If m_loop <> 0 Then FSOUND_Sample_SetMode(m_snd, FSOUND_LOOP_NORMAL)
-	FSOUND_PlaySound(FSOUND_FREE, m_snd)
+	If m_streaming = 1 Then
+		FSOUND_Stream_Play(FSOUND_FREE, m_stream)
+	Else
+		FSOUND_PlaySound(FSOUND_FREE, m_sample)
+	EndIf
 End Sub
 
 Sub Sound.setLoop(ByVal flag As Byte) TRUEENGINE2D_API_EXPORT
 	m_loop = flag
+	If m_loop <> 0 Then
+		If m_streaming = 1 Then
+			FSOUND_Stream_SetMode(m_stream, FSOUND_LOOP_NORMAL)
+		Else
+			FSOUND_Sample_SetMode(m_sample, FSOUND_LOOP_NORMAL)
+		EndIf	
+	Else
+		If m_streaming = 1 Then
+			FSOUND_Stream_SetMode(m_stream, FSOUND_LOOP_OFF)
+		Else
+			FSOUND_Sample_SetMode(m_sample, FSOUND_LOOP_OFF)
+		EndIf
+	EndIf
 End Sub
