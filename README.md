@@ -3,3 +3,4 @@
 
 # DEPENDENCIES
 IrrlichtWrapper
+FMOD
