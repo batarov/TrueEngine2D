@@ -20,10 +20,10 @@
 
 #Include "Input.bi"
 
-Dim utils.Input.mouseDown As Byte = 0
-Dim utils.Input.mouseUp As Byte = 1
-Dim utils.Input.mousePressed As Byte = 0
-Dim utils.Input.mouseReleased As Byte = 0
+Dim utils.Input.m_mouseDown As Byte = 0
+Dim utils.Input.m_mouseUp As Byte = 1
+Dim utils.Input.m_mousePressed As Byte = 0
+Dim utils.Input.m_mouseReleased As Byte = 0
 
 Dim utils.Input.m_key(255) as Byte
 Dim utils.Input.m_press(255) as Integer
@@ -34,17 +34,17 @@ Dim utils.Input.m_pressNum as Integer = 0
 Dim utils.Input.m_releaseNum as Integer = 0
 
 Sub utils.Input.OnMouseDown() TRUEENGINE2D_API_EXPORT
-	if mouseDown = 0 Then
-		mouseDown = 1
-		mouseUp = 0
-		mousePressed = 1
+	if m_mouseDown = 0 Then
+		m_mouseDown = 1
+		m_mouseUp = 0
+		m_mousePressed = 1
 	EndIf      
 End Sub
 
 Sub utils.Input.OnMouseUp() TRUEENGINE2D_API_EXPORT
-	mouseDown = 0
-	mouseUp = 1
-	mouseReleased = 1
+	m_mouseDown = 0
+	m_mouseUp = 1
+	m_mouseReleased = 1
 End Sub
 
 Sub utils.Input.OnKeyDown(e as KeyEventPtr) TRUEENGINE2D_API_EXPORT	' get the keycode
@@ -125,6 +125,22 @@ Sub utils.Input.Update() TRUEENGINE2D_API_EXPORT
 		m_release(m_releaseNum) = -1
 	wend
 	m_releaseNum = 0
-	If mousePressed = 1 Then mousePressed = 0
-	if mouseReleased = 1 Then  mouseReleased = 0
+	If m_mousePressed = 1 Then m_mousePressed = 0
+	if m_mouseReleased = 1 Then  m_mouseReleased = 0
 End Sub
+
+Function utils.Input.MouseDown() As Byte TRUEENGINE2D_API_EXPORT
+	Return m_mouseDown
+End Function
+		
+Function utils.Input.MouseUp() As Byte TRUEENGINE2D_API_EXPORT
+	Return m_mouseUp
+End Function
+
+Function utils.Input.MousePressed() As Byte TRUEENGINE2D_API_EXPORT
+	Return m_mousePressed
+End Function
+
+Function utils.Input.MouseReleased() As Byte TRUEENGINE2D_API_EXPORT
+	Return m_mouseReleased
+End Function

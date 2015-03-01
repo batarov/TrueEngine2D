@@ -24,15 +24,16 @@ type KeyEventPtr as IRR_KEY_EVENT Ptr
 
 Namespace utils
 	Type Input extends object
-		Static mouseDown As Byte
-		
-		Static mouseUp As Byte
-		
-		Static mousePressed As Byte
-		
-		Static mouseReleased As Byte
 		
 		Static lastKey As Integer
+		
+		Declare Static Function MouseDown() As Byte
+		
+		Declare Static Function MouseUp() As Byte
+		
+		Declare Static Function MousePressed() As Byte
+		
+		Declare Static Function MouseReleased() As Byte
 		
 		Declare Static Sub OnMouseDown()
 		
@@ -66,5 +67,13 @@ Namespace utils
 			Static m_pressNum as Integer
 			
 			Static m_releaseNum as Integer
+			
+			Static m_mouseDown As Byte
+		
+			Static m_mouseUp As Byte
+		
+			Static m_mousePressed As Byte
+		
+			Static m_mouseReleased As Byte
 	End Type
 End Namespace
