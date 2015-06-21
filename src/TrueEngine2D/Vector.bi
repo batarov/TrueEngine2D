@@ -25,7 +25,7 @@ Type Vector##N_
 
 	Declare Destructor()
 	
-	Declare Sub push_back(e As T_)
+	Declare Sub push_back(ByRef e As Const T_)
 	
 	Declare Function size() As Integer
 	
@@ -44,6 +44,8 @@ Type Vector##N_
 	Declare Sub remove(ByVal i As UInteger)
 	
 	Declare Sub remove (ByVal i As UInteger, ByVal count_ As UInteger)
+
+    Declare Function data() as T_ Ptr
 	
 Private:
 	elem As T_ Ptr = 0
@@ -67,20 +69,9 @@ Function Vector##N_.size() As Integer TRUEENGINE2D_API_EXPORT
 	Return sz
 End Function
 
-Sub Vector##N_.push_back(e As T_) TRUEENGINE2D_API_EXPORT
-	If m_capacity >= size + 1 Then
-		elem[sz + 1] = e
-		Return
-	EndIf
-	Dim As T_ Ptr buf = New T_[sz + 1]
-	For i As Integer = 0 To sz - 1
-		buf[i] = elem[i]	
-	Next
-	Delete[] elem
-	elem = buf
-	elem[sz] = e
-	sz += 1
-	m_capacity = sz
+Sub Vector##N_.push_back(ByRef e As Const T_) TRUEENGINE2D_API_EXPORT
+	length = sz + 1
+	elem[sz + 1] = e
 End Sub
 
 Function Vector##N_.at(ByVal index As Integer) ByRef As T_ TRUEENGINE2D_API_EXPORT
@@ -140,4 +131,8 @@ Sub Vector##N_.remove(ByVal i As UInteger, ByVal count_ As UInteger) TRUEENGINE2
 	Wend
 	sz -= count_
 End Sub
+
+Function Vector##N_.data() as T_ Ptr TRUEENGINE2D_API_EXPORT
+    Return elem
+End Function
 #EndMacro
