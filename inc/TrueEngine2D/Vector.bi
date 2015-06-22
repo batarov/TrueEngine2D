@@ -71,7 +71,7 @@ End Function
 
 Sub Vector##N_.push_back(ByRef e As Const T_) TRUEENGINE2D_API_EXPORT
 	length = sz + 1
-	elem[sz + 1] = e
+	elem[sz - 1] = e
 End Sub
 
 Function Vector##N_.at(ByVal index As Integer) ByRef As T_ TRUEENGINE2D_API_EXPORT
