@@ -18,21 +18,23 @@
 ''
 ''
 
-#Include once "Background.bi"
-#Include "Config.bi"
+#Pragma Once
 
-Sub Background.DrawImage(ByVal x As Integer, ByVal y As Integer) TRUEENGINE2D_API_EXPORT
-	IrrDraw2DImageElementStretch(*m_tex, 0, 0, m_width, m_height, 0, 0, m_width, m_height, IRR_ON)
-End Sub
+#Include "ReferenceCounted.bi"
+#include "Size.bi"
 
-Sub Background.SetWidth(ByVal w As Integer) TRUEENGINE2D_API_EXPORT
-	m_width = w
-End Sub
+Type Texture extends ReferenceCounted
+    Declare Constructor()
+    Declare Destructor()
+    Declare Function Load(ByRef path As Const String) As bool
+    Declare Const Function GetSize() as Size
+    Declare Operator Cast() as UInteger Ptr
 
-Sub Background.SetHeight(ByVal h As Integer) TRUEENGINE2D_API_EXPORT
-	m_height = h
-End Sub
+Private:
+    Declare Constructor(ByRef as Const Texture)
+    Declare Operator Let(ByRef as Const Texture)
 
-Sub Background.Render(ByVal x As Integer, ByVal y As Integer) TRUEENGINE2D_API_EXPORT
-	DrawImage(x, y)
-End Sub
+Public:
+    /'internal'/ m_tex As UInteger Ptr
+    /'internal'/ m_size as Size
+End Type

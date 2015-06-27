@@ -20,21 +20,22 @@
 
 #Include "Engine.bi"
 
-#include "IrrlichtWrapper.bi"
+#include once "IrrlichtWrapper.bi"
 
-#Include "Config.bi"
 #Include "World.bi"
 #Include "Input.bi"
-#Include "Background.bi"
+#Include "Math.bi"
+#include "Matrix.bi"
+#Include "Config.bi"
 
-Dim Engine.m_instance As Engine Ptr = 0
+Dim Engine.m_instance As Engine Ptr = nullptr
 
 Constructor Engine() TRUEENGINE2D_API_EXPORT
-	m_world = New World
+    m_world = new World
 End Constructor
 
 Destructor Engine() TRUEENGINE2D_API_EXPORT
-
+    m_world->Drop()
 End Destructor
 
 Sub Engine.SetFrameRate(ByVal frameRate As Single) TRUEENGINE2D_API_EXPORT
@@ -50,7 +51,12 @@ End Sub
 
 Sub Engine.StartMainLoop() TRUEENGINE2D_API_EXPORT
 	' switch worlds
-	if m_goto <> 0 Then CheckWorld()
+	if m_goto <> nullptr Then CheckWorld()
+    
+    Dim projectionMatrix as Matrix
+    projectionMatrix.BuildProjectionMatrixOrthoLH(m_width, - CLng(m_height), -1, 1)
+    projectionMatrix.SetTranslation(1, 1, 0)
+	IrrSetTransform(ETS_PROJECTION, projectionMatrix)
 	
 	' fixed framerate
 	m_rate = 1000 / m_frameRate
@@ -62,14 +68,14 @@ Sub Engine.StartMainLoop() TRUEENGINE2D_API_EXPORT
 	Dim As Single fTime, fDeltaTime
 	t0 = IrrGetTime()
 	fTime = 0
-	While IrrRunning And m_ShutdownRequested <> 1
+	While IrrRunning And m_ShutdownRequested = false
 		While IrrKeyEventAvailable
 				Dim KeyEvent As IRR_KEY_EVENT Ptr = IrrReadKeyEvent
     			If KeyEvent->direction = IRR_KEY_DOWN Then
 					utils.Input.OnKeyDown(KeyEvent)
     			ElseIf KeyEvent->direction = IRR_KEY_UP Then
 					utils.Input.OnKeyUp(KeyEvent)
-    			EndIf
+    			End If
 		Wend
 		
 		While IrrMouseEventAvailable
@@ -82,7 +88,7 @@ Sub Engine.StartMainLoop() TRUEENGINE2D_API_EXPORT
 				Or ev->action = IRR_EMIE_RMOUSE_LEFT_UP _
 				Or ev->action = IRR_EMIE_MMOUSE_LEFT_UP Then
 				utils.Input.OnMouseUp()
-			EndIf
+			End If
 		Wend
 		
 		' update Timer
@@ -99,7 +105,7 @@ Sub Engine.StartMainLoop() TRUEENGINE2D_API_EXPORT
 			m_prev = m_time
 			
 			' update loop
-			if paused = 0 Then Update()
+			if paused = false Then Update()
 			
 			' update input
 			utils.Input.Update()
@@ -109,63 +115,58 @@ Sub Engine.StartMainLoop() TRUEENGINE2D_API_EXPORT
 		Wend				
 		
 		' render loop
-		if paused = 0 Then
-			IrrBeginScene( 0,0,0 )
+		if paused = false Then
+			IrrBeginScene( 0,0,0 )			
 			Render()
 			IrrEndScene
-		EndIf
+		End If
 	Wend
 End Sub
 
 Sub Engine.StopMainLoop() TRUEENGINE2D_API_EXPORT
-	m_ShutdownRequested = 1
+	m_shutdownRequested = true
 End Sub
 
 Sub Engine.Update() TRUEENGINE2D_API_EXPORT
-	m_world->UpdateLists()
- 	if m_goto <> 0 Then CheckWorld()
-   m_world->Update()
-   m_world->UpdateLists(0)
+    m_world->UpdateLists()
+    if m_goto <> nullptr Then CheckWorld()
+    m_world->Update()
+    m_world->UpdateLists(false)
 End Sub
 
 Sub Engine.Render() TRUEENGINE2D_API_EXPORT
-	m_world->Render()
+	if m_world->visible = true then m_world->Render()
 End Sub
 
 Sub Engine.CheckWorld() TRUEENGINE2D_API_EXPORT
-	If m_goto = 0 Then Return
+	If m_goto = nullptr Then Return
 	m_world->EndWorld()
-	m_world->UpdateLists() 
+	m_world->UpdateLists()
+    m_world->Drop()
 	m_world = m_goto
-	m_goto = 0
+	m_goto = nullptr
 	m_world->UpdateLists()
 	m_world->BeginWorld()
 	m_world->UpdateLists()	
 End Sub
 
 Function Engine.AddWorld(world As World Ptr) as WorldPtr TRUEENGINE2D_API_EXPORT
-	m_goto = world 
+	m_goto = world
+    world->Grab() 
 	return world
 End Function
 
 Function Engine.GetInstance() As Engine Ptr TRUEENGINE2D_API_EXPORT
-	If m_instance = 0 Then m_instance = New Engine()
+	If m_instance = nullptr Then m_instance = New Engine()
 	Return m_instance
 End Function
 
 Sub Engine.Destroy() TRUEENGINE2D_API_EXPORT
 	IrrStop
 	Delete m_instance
-	m_instance = 0
+	m_instance = nullptr
 End Sub
 
 Function Engine.GetWorld() As WorldPtr TRUEENGINE2D_API_EXPORT
 	Return m_world
 End Function
-
-#include "Input.bas"
-#include "Graphic.bas"
-#include "Image.bas"
-#include "Background.bas"
-#include "Font.bas"
-#Include "Draw.bas"

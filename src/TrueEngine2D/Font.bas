@@ -20,23 +20,33 @@
 
 
 #include "Font.bi"
+#include "Config.bi"
+
+#include once "IrrlichtWrapper.bi"
 
 type FontPrivate
-	fnt as irr_font
+    fnt as irr_font
 end type
 
 constructor Font() TRUEENGINE2D_API_EXPORT
-	m_d = new FontPrivate
+    m_d = new FontPrivate
 end constructor
 
 destructor Font() TRUEENGINE2D_API_EXPORT
-	delete m_d
+    delete m_d
 end destructor
 
-sub Font.Load(byval path as zstring ptr) TRUEENGINE2D_API_EXPORT
-	m_d->fnt =  IrrGetFont(path)
+Function Font.Load(ByVal path As zstring ptr) As bool TRUEENGINE2D_API_EXPORT
+    m_d->fnt = IrrGetFont(path)
+    Return m_d->fnt <> nullptr
+End Function
+
+sub Font.DrawText(ByVal x As Integer, ByVal y As Integer, byval width_ as integer, byval height_ as integer, ByRef text As Const WString) TRUEENGINE2D_API_EXPORT
+    Irr2DFontDraw(m_d->fnt, @text, x, y, x + width_, y + height_)
 end sub
 
-sub Font.DrawText(byval x as integer, byval y as integer, byval width_ as integer, byval height_ as integer, byval text as wstring ptr) TRUEENGINE2D_API_EXPORT
-	Irr2DFontDraw(m_d->fnt, text, x, y, x + width_, y + height_)
-end sub
+Function Font.GetSize(ByRef text As Const WString) As Size TRUEENGINE2D_API_EXPORT
+    Dim sz As Size
+    IrrFontGetDimension(m_d->fnt, @text, sz.width, sz.height)
+    Return sz
+End Function

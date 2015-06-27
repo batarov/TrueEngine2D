@@ -18,17 +18,11 @@
 ''
 ''
 
-#Include "Graphic.bi"
-#Include "Config.bi"
+#Pragma Once
 
-Constructor Graphic() TRUEENGINE2D_API_EXPORT
-End Constructor
+#include "Types.bi"
 
-Destructor Graphic() TRUEENGINE2D_API_EXPORT
-End Destructor
-
-Sub Graphic.Update() TRUEENGINE2D_API_EXPORT
-End Sub
-
-Sub Graphic.Render(ByVal x As Integer, ByVal y As Integer) TRUEENGINE2D_API_EXPORT
-End Sub
+Type Size
+    width As s32
+    height As s32
+End Type

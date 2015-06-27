@@ -20,6 +20,8 @@
 
 #Pragma Once
 
+#include "Types.bi"
+
 type KeyEventPtr as IRR_KEY_EVENT Ptr
 
 Namespace utils
@@ -27,13 +29,13 @@ Namespace utils
 		
 		Static lastKey As Integer
 		
-		Declare Static Function MouseDown() As Byte
+		Declare Static Function MouseDown() As bool
 		
-		Declare Static Function MouseUp() As Byte
+		Declare Static Function MouseUp() As bool
 		
-		Declare Static Function MousePressed() As Byte
+		Declare Static Function MousePressed() As bool
 		
-		Declare Static Function MouseReleased() As Byte
+		Declare Static Function MouseReleased() As bool
 		
 		Declare Static Sub OnMouseDown()
 		
@@ -47,33 +49,33 @@ Namespace utils
 		
 		Declare Static Function GetMouseY() As Integer
 		
-		Declare Static Function Check(ByVal key as Integer) As Byte
+		Declare Static Function Check(ByVal key as Integer) As bool
 		
-		Declare Static Function Pressed(ByVal key as Integer) As Byte
+		Declare Static Function Pressed(ByVal key as Integer) As bool
 		
-		Declare Static Function Released(ByVal key as Integer) As Byte
+		Declare Static Function Released(ByVal key as Integer) As bool
 
 		Declare Static Sub Update()
 		
-		Private:
-			Static m_keyNum as Integer
+    Private:
+		Static m_keyNum as Integer
 			
-			Static m_key(255) as Byte
+		Static m_key(255) as bool
 			
-			Static m_press(255) as Integer
+		Static m_press(255) as Integer
 			
-			Static m_release(255) as Integer
+		Static m_release(255) as Integer
 			
-			Static m_pressNum as Integer
+		Static m_pressNum as Integer
 			
-			Static m_releaseNum as Integer
+		Static m_releaseNum as Integer
 			
-			Static m_mouseDown As Byte
+		Static m_mouseDown As bool
 		
-			Static m_mouseUp As Byte
+		Static m_mouseUp As bool
 		
-			Static m_mousePressed As Byte
+		Static m_mousePressed As bool
 		
-			Static m_mouseReleased As Byte
+		Static m_mouseReleased As bool
 	End Type
 End Namespace

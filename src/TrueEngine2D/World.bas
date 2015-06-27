@@ -21,7 +21,8 @@
 #Include "World.bi"
 #Include "Config.bi"
 #Include "Entity.bi"
-#Include "Background.bi"
+#Include "graphics/Background.bi"
+#include "utils/Algorithms.bi"
 
 #Include "Debug.bi"
 
@@ -29,6 +30,9 @@ DEFINE_VECTOR(EntityPtr, EntityPtr)
 DEFINE_VECTOR(Int, Integer)
 DEFINE_MAP(StrEntityPtr, String, EntityPtr)
 DEFINE_MAP(StrInt, String, Integer)
+
+Constructor World() TRUEENGINE2D_API_EXPORT
+End Constructor
 
 Destructor World() TRUEENGINE2D_API_EXPORT
 End Destructor
@@ -38,6 +42,7 @@ End Sub
 
 Function World.AddEntity(ByVal e As EntityPtr) As EntityPtr TRUEENGINE2D_API_EXPORT
 	m_add.push_back(e)
+    e->Grab()
 	Return e
 End Function
 
@@ -46,39 +51,78 @@ Function World.RemoveEntity(ByVal e As EntityPtr) As EntityPtr TRUEENGINE2D_API_
 	Return e
 End Function
 
-Sub World.Update() TRUEENGINE2D_API_EXPORT
+Sub World.Update() TRUEENGINE2D_API_EXPORT    
+    If m_bg.hspeed <> 0 Then
+        m_bg.x += m_bg.hspeed
+    End If
+    
+    If m_bg.vspeed <> 0 Then
+        m_bg.y += m_bg.vspeed
+    End If
+    
+    If m_bg.bg <> nullptr Then CPtr(Graphic Ptr, m_bg.bg)->Update()
+    
 	' update the entities
 	Dim e As EntityPtr = m_updateFirst
-	While e <> 0
+	While e <> nullptr
 		e->Update()
-		If e->m_graphic <> 0 AndAlso e->m_graphic->active = 1 Then e->m_graphic->Update()
+		If e->m_graphic <> nullptr AndAlso e->m_graphic->active = true Then e->m_graphic->Update()
 		e = e->m_updateNext
 	Wend
 End Sub
 
 Sub World.Render() TRUEENGINE2D_API_EXPORT
-	If m_bg <> 0 Then m_bg->Render(0, 0)
+	If m_bg.bg <> nullptr Then CPtr(Graphic Ptr, m_bg.bg)->Render(m_bg.x, m_bg.y)
 	
 	' sort the depth list
-	if m_layerSort <> 0 Then 
-		
-	EndIf
+	If m_layerSort = true Then
+	   If m_layerList.length > 1 Then Sort(m_layerList.data(), m_layerList.length)
+	   m_layerSort = false
+	End If
 
 	' render the entities in order of depth
 	Dim e As EntityPtr
-   Dim i As Integer = m_layerList.length
+    Dim i As Integer = m_layerList.length
 	While i <> 0
 		i -= 1
 		e = m_renderLast.at(m_layerList.at(i))
-		While e <> 0
-			if e->visible <> 0 Then e->Render()
-		   e = e->m_renderPrev
+		While e <> nullptr
+		  if e->visible = true Then e->Render()
+		  e = e->m_renderPrev
 		Wend
 	Wend
 End Sub
 
 Sub World.SetBackground(ByVal bg as BackgroundPtr) TRUEENGINE2D_API_EXPORT
-	m_bg = bg
+	m_bg.bg = bg
+End Sub
+
+Sub World.SetBackgroundX(ByVal x As Long) TRUEENGINE2D_API_EXPORT
+    m_bg.x = x
+End Sub
+    
+Sub World.SetBackgroundY(ByVal y As Long) TRUEENGINE2D_API_EXPORT
+    m_bg.y = y
+End Sub
+
+Sub World.SetBackgroundScaleX(ByVal scaleX As Single) TRUEENGINE2D_API_EXPORT
+    If m_bg.bg <> nullptr Then
+        m_bg.bg->scaleX = scaleX
+    EndIf
+End Sub
+    
+Sub World.SetBackgroundScaleY(ByVal scaleY As Single) TRUEENGINE2D_API_EXPORT
+    If m_bg.bg <> nullptr Then
+        m_bg.bg->scaleY = scaleY
+    EndIf
+End Sub
+
+Sub World.SetBackgroundHSpeed(ByVal hspeed As Single) TRUEENGINE2D_API_EXPORT
+    m_bg.hspeed = hspeed
+End Sub
+
+Sub World.SetBackgroundVSpeed(ByVal vspeed As Single) TRUEENGINE2D_API_EXPORT
+    m_bg.vspeed = vspeed
 End Sub
 
 Sub World.BeginWorld() TRUEENGINE2D_API_EXPORT
@@ -87,7 +131,7 @@ End Sub
 Sub World.EndWorld() TRUEENGINE2D_API_EXPORT
 End Sub
 
-Sub World.UpdateLists(ByVal shouldAdd As Byte) TRUEENGINE2D_API_EXPORT
+Sub World.UpdateLists(ByVal shouldAdd As bool) TRUEENGINE2D_API_EXPORT
 		Dim e As EntityPtr
 		Dim index As Integer
 		Dim size As Integer
@@ -97,11 +141,13 @@ Sub World.UpdateLists(ByVal shouldAdd As Byte) TRUEENGINE2D_API_EXPORT
 		if size > 0 Then
 			For i As Integer = 0 To size - 1
 				e = m_remove.at(i)
-				If e->m_world = 0 Then
+				If e->m_world = nullptr Then
 					index = m_add.indexOf(e)
-					If index >= 0 Then m_add.replace(index, 0)
+					If index >= 0 Then
+						m_add.replace(index, 0)
+					End If
 					Continue	For				
-				EndIf
+				End If
 				If e->m_world <> @This Then Continue For
 				
 				e->Removed()
@@ -111,6 +157,7 @@ Sub World.UpdateLists(ByVal shouldAdd As Byte) TRUEENGINE2D_API_EXPORT
 				RemoveRender(e)
 				If Len(e->m_type) > 0 Then RemoveType(e)
 				If Len(e->m_name) > 0 Then UnregisterName(e)
+                e->Drop()
 			Next
 			m_remove.length = 0
 		EndIf
@@ -118,15 +165,15 @@ Sub World.UpdateLists(ByVal shouldAdd As Byte) TRUEENGINE2D_API_EXPORT
 		size = m_add.length
 		If shouldAdd <> 0 AndAlso size > 0 Then
 			For i As Integer = 0 To size - 1
-				e = m_add.at(i)
-				If  e->m_world <> 0 Then Continue For
+				e = m_add.at(i) 
+				If  e->m_world <> nullptr Then Continue For
 				AddUpdate(e)
 				AddRender(e)
 				If Len(e->m_type) > 0 Then AddType(e)
 				If Len(e->m_name) > 0 Then RegisterName(e)
 				
 				e->m_world = @this
-            e->Added() 
+                e->Added()
 			Next
 			m_add.length = 0
 		EndIf
@@ -134,13 +181,13 @@ End Sub
 
 Sub World.AddUpdate(e As EntityPtr)
 	' add to update list
-	If m_updateFirst <> 0 Then		
-		m_updateFirst->m_updatePrev = e
-      e->m_updateNext = m_updateFirst
+	If m_updateFirst <> nullptr Then
+        m_updateFirst->m_updatePrev = e
+        e->m_updateNext = m_updateFirst
 	Else
-		e->m_updateNext = 0
-	EndIf
-	e->m_updatePrev = 0
+		e->m_updateNext = nullptr
+	End If
+	e->m_updatePrev = nullptr
 	m_updateFirst = e
 	m_count += 1
 End Sub
@@ -148,90 +195,92 @@ End Sub
 Sub World.RemoveUpdate(ByVal e As EntityPtr)
 	' remove from the update list
 	if m_updateFirst = e Then m_updateFirst = e->m_updateNext
-	if e->m_updateNext <> 0 Then e->m_updateNext->m_updatePrev = e->m_updatePrev
-	if e->m_updatePrev <> 0 Then e->m_updatePrev->m_updateNext = e->m_updateNext
-	e->m_updateNext = 0
-	e->m_updatePrev = 0
+	if e->m_updateNext <> nullptr Then e->m_updateNext->m_updatePrev = e->m_updatePrev
+	if e->m_updatePrev <> nullptr Then e->m_updatePrev->m_updateNext = e->m_updateNext
+	e->m_updateNext = nullptr
+	e->m_updatePrev = nullptr
 	m_count -= 1
 End Sub
 
 Sub World.AddRender(e As EntityPtr) TRUEENGINE2D_API_EXPORT
-	Dim f As EntityPtr = 0
-	If e->m_layer < m_renderFirst.length Then f = m_renderFirst.at(e->m_layer)
-	If f <> 0 Then
-		' Append entity to existing layer.
+	Dim f As EntityPtr	
+	If e->m_layer < m_renderFirst.length Then
+	    f = m_renderFirst.at(e->m_layer)
+	End If	
+	If f <> nullptr Then
+	    ' Append entity to existing layer.
 		e->m_renderNext = f
-      f->m_renderPrev = e
-      Var count = m_layerCount.at(e->m_layer) + 1
-      m_layerCount.replace(e->m_layer, count)
+        f->m_renderPrev = e
+        Var c = m_layerCount.at(e->m_layer) + 1
+        m_layerCount.replace(e->m_layer, c)        
 	Else
 		' Create new layer with entity.
 		If e->m_layer >= m_renderLast.length Then
-			m_renderLast.length = e->m_layer + 1 
-		EndIf
+		    m_renderLast.length = e->m_layer + 1
+		End If		
 		m_renderLast.replace(e->m_layer, e)
 		m_layerList.push_back(e->m_layer)
-		m_layerSort = 1
-		e->m_renderNext = 0
+		m_layerSort = true
+		e->m_renderNext = nullptr		
 		If e->m_layer >= m_layerCount.length Then
-			m_layerCount.length = e->m_layer + 1
-		EndIf
-		m_layerCount.replace(e->m_layer, 1)
-	EndIf
-	If e->m_layer >= m_renderFirst.length Then
-		m_renderFirst.length = e->m_layer + 1
-	EndIf
+		    m_layerCount.length = e->m_layer + 1
+		End If	    
+		m_layerCount.replace(e->m_layer, 1)		
+	End If
+	If e->m_layer > = m_renderFirst.length Then
+	    m_renderFirst.length = e->m_layer + 1
+	End If	 
 	m_renderFirst.replace(e->m_layer, e)
-	e->m_renderPrev = 0
+	e->m_renderPrev = nullptr
 End Sub
 
 Sub World.RemoveRender(ByVal e As EntityPtr) TRUEENGINE2D_API_EXPORT
-	If e->m_renderNext <> 0 Then
+	If e->m_renderNext Then
 		e->m_renderNext->m_renderPrev = e->m_renderPrev
 	Else
 		m_renderLast.replace(e->m_layer, e->m_renderPrev)
-	EndIf
-	If e->m_renderPrev <> 0 Then
+	End If	
+	If e->m_renderPrev Then
 		e->m_renderPrev->m_renderNext = e->m_renderNext
 	Else
 		' Remove this entity from the layer.
 		m_renderFirst.replace(e->m_layer, e->m_renderNext)
-		If e->m_renderNext = 0 Then
+		If e->m_renderNext = nullptr Then
 			' Remove the layer from the layer list if this was the last entity.
 			If m_layerList.length > 1 Then
 				m_layerList.replace(m_layerList.indexOf(e->m_layer), m_layerList.last())
-				m_layerSort = 1
-			EndIf
-			m_layerList.length = m_layerList.length - 1
-		EndIf
-	EndIf
+				m_layerSort = true
+			End If
+            m_layerList.length = m_layerList.length - 1
+		End If
+	End If	
 	m_layerCount.replace(e->m_layer, m_layerCount.at(e->m_layer) - 1)
-	e->m_renderNext = 0 
-	e->m_renderPrev = 0
+	e->m_renderNext = nullptr
+	e->m_renderPrev = nullptr
 End Sub
 
 Sub World.AddType(e As EntityPtr) TRUEENGINE2D_API_EXPORT
 	' add to type list
-	Dim f As EntityPtr = m_typeFirst.value(e->m_type, 0) 
-	if f <> 0 Then
+	Dim f As EntityPtr = m_typeFirst.value(e->m_type, nullptr) 
+	if f <> nullptr Then
 		f->m_typePrev = e
 		e->m_typeNext = f
 		m_typeCount.insert(e->m_type, m_typeCount.value(e->m_type, 0) + 1)
 	Else
-		e->m_typeNext = 0
+		e->m_typeNext = nullptr
 		m_typeCount.insert(e->m_type, 1)
-	EndIf
-	e->m_typePrev = 0
+	End If
+	e->m_typePrev = nullptr
  	m_typeFirst.insert(e->m_type, e)
 End Sub
 
 Sub World.RemoveType(e As EntityPtr) TRUEENGINE2D_API_EXPORT
 	' remove from the type list
-	if m_typeFirst.value(e->m_type, 0) = e Then m_typeFirst.insert(e->m_type, e->m_typeNext)
-	If e->m_typeNext <> 0 Then e->m_typeNext->m_typePrev = e->m_typePrev
-	if e->m_typePrev <> 0 Then e->m_typePrev->m_typeNext = e->m_typeNext
-	e->m_typeNext = 0
-	e->m_typePrev = 0
+	if m_typeFirst.value(e->m_type, nullptr) = e Then m_typeFirst.insert(e->m_type, e->m_typeNext)
+	If e->m_typeNext <> nullptr Then e->m_typeNext->m_typePrev = e->m_typePrev
+	if e->m_typePrev <> nullptr Then e->m_typePrev->m_typeNext = e->m_typeNext
+	e->m_typeNext = nullptr
+	e->m_typePrev = nullptr
 	m_typeCount.insert(e->m_type, m_typeCount.value(e->m_type, 1) - 1)
 End Sub
 
@@ -240,7 +289,7 @@ Sub World.RegisterName(e As EntityPtr) TRUEENGINE2D_API_EXPORT
 End Sub
 
 Sub World.UnregisterName(e As EntityPtr) TRUEENGINE2D_API_EXPORT
-	if m_entityNames.value(e->m_name, 0) = e Then m_entityNames.remove(e->m_name)
+	if m_entityNames.value(e->m_name, nullptr) = e Then m_entityNames.remove(e->m_name)
 End Sub
 
 Function World.GetFirst() As EntityPtr TRUEENGINE2D_API_EXPORT
@@ -248,6 +297,14 @@ Function World.GetFirst() As EntityPtr TRUEENGINE2D_API_EXPORT
 End Function
 
 Function World.GetTypeFirst(ByRef type_ As Const String) As EntityPtr TRUEENGINE2D_API_EXPORT
-	If m_updateFirst = 0 Then Return 0
-	Return m_typeFirst.value(type_, 0)
+	If m_updateFirst = nullptr Then Return nullptr
+	Return m_typeFirst.value(type_, nullptr)
+End Function
+
+Property World.count() As UInteger TRUEENGINE2D_API_EXPORT
+	Return m_count
+End Property
+
+Function World.GetTypeCount(ByRef type_ As String) As UInteger TRUEENGINE2D_API_EXPORT
+	Return CUInt(m_typeCount.value(type_, 0))
 End Function

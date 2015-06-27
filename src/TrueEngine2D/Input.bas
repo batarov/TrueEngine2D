@@ -19,13 +19,16 @@
 ''
 
 #Include "Input.bi"
+#include "Config.bi"
 
-Dim utils.Input.m_mouseDown As Byte = 0
-Dim utils.Input.m_mouseUp As Byte = 1
-Dim utils.Input.m_mousePressed As Byte = 0
-Dim utils.Input.m_mouseReleased As Byte = 0
+#include once "IrrlichtWrapper.bi"
 
-Dim utils.Input.m_key(255) as Byte
+Dim utils.Input.m_mouseDown As bool = false
+Dim utils.Input.m_mouseUp As bool = true
+Dim utils.Input.m_mousePressed As bool = false
+Dim utils.Input.m_mouseReleased As bool = false
+
+Dim utils.Input.m_key(255) as bool
 Dim utils.Input.m_press(255) as Integer
 Dim utils.Input.m_release(255) as Integer
 Dim utils.Input.lastKey as Integer = 0
@@ -34,17 +37,17 @@ Dim utils.Input.m_pressNum as Integer = 0
 Dim utils.Input.m_releaseNum as Integer = 0
 
 Sub utils.Input.OnMouseDown() TRUEENGINE2D_API_EXPORT
-	if m_mouseDown = 0 Then
-		m_mouseDown = 1
-		m_mouseUp = 0
-		m_mousePressed = 1
-	EndIf      
+	if m_mouseDown = false Then
+		m_mouseDown = true
+		m_mouseUp = false
+		m_mousePressed = true
+	End If      
 End Sub
 
 Sub utils.Input.OnMouseUp() TRUEENGINE2D_API_EXPORT
-	m_mouseDown = 0
-	m_mouseUp = 1
-	m_mouseReleased = 1
+	m_mouseDown = false
+	m_mouseUp = true
+	m_mouseReleased = true
 End Sub
 
 Sub utils.Input.OnKeyDown(e as KeyEventPtr) TRUEENGINE2D_API_EXPORT	' get the keycode
@@ -52,24 +55,24 @@ Sub utils.Input.OnKeyDown(e as KeyEventPtr) TRUEENGINE2D_API_EXPORT	' get the ke
 	lastKey = e->key
 	Dim code as Integer = lastKey
 	if (code < 0 Or code > 255) then return
-	if (m_key(code) = 0) Then
-		m_key(code) = 1
+	if (m_key(code) = false) Then
+		m_key(code) = true
 		m_keyNum += 1
 		m_press(m_pressNum) = code
 		m_pressNum += 1
-	EndIf
+	End If
 End Sub
 
 Sub utils.Input.OnKeyUp(e as KeyEventPtr) TRUEENGINE2D_API_EXPORT
 	' get the keycode
 	Dim code as Integer = e->key			
 	if (code < 0 Or code > 255) then return			
-	if (m_key(code) <> 0) then
-		m_key(code) = 0
+	if (m_key(code) <> false) then
+		m_key(code) = false
 		m_keyNum -= 1
 		m_release(m_releaseNum) = code
 		m_releaseNum += 1
-	EndIf
+	End If
 End Sub
 
 Function utils.Input.GetMouseX() As Integer TRUEENGINE2D_API_EXPORT
@@ -84,33 +87,33 @@ Function utils.Input.GetMouseY() As Integer TRUEENGINE2D_API_EXPORT
 	Return y
 End Function
 
-Function utils.Input.Check(key as Integer) As Byte TRUEENGINE2D_API_EXPORT
+Function utils.Input.Check(key as Integer) As bool TRUEENGINE2D_API_EXPORT
 	Return IIf(key < 0, (m_keyNum > 0), m_key(key))
 End Function
 
-Function utils.Input.Pressed(key as Integer) As Byte TRUEENGINE2D_API_EXPORT
+Function utils.Input.Pressed(key as Integer) As bool TRUEENGINE2D_API_EXPORT
 	if key < 0 then
 		return  m_pressNum
 	else
 		for i as Integer = 0 to 255
 			if m_press(i) = key then
-				return 1
-			endif
+				return true
+			end if
 		next
-		return 0
-	EndIf
+		return false
+	End If
 End Function
 
-Function utils.Input.Released(ByVal key as Integer) As Byte TRUEENGINE2D_API_EXPORT
+Function utils.Input.Released(ByVal key as Integer) As bool TRUEENGINE2D_API_EXPORT
 	If key < 0 Then
 		Return m_releaseNum
 	Else
 		for i as Integer = 0 to 255
 			if m_release(i) = key then
-				return 1
-			endif
+				return true
+			end if
 		next
-		return 0
+		return false
 	EndIf
 End Function
 
@@ -125,22 +128,22 @@ Sub utils.Input.Update() TRUEENGINE2D_API_EXPORT
 		m_release(m_releaseNum) = -1
 	wend
 	m_releaseNum = 0
-	If m_mousePressed = 1 Then m_mousePressed = 0
-	if m_mouseReleased = 1 Then  m_mouseReleased = 0
+	If m_mousePressed = true Then m_mousePressed = false
+	if m_mouseReleased = true Then  m_mouseReleased = false
 End Sub
 
-Function utils.Input.MouseDown() As Byte TRUEENGINE2D_API_EXPORT
+Function utils.Input.MouseDown() As bool TRUEENGINE2D_API_EXPORT
 	Return m_mouseDown
 End Function
 		
-Function utils.Input.MouseUp() As Byte TRUEENGINE2D_API_EXPORT
+Function utils.Input.MouseUp() As bool TRUEENGINE2D_API_EXPORT
 	Return m_mouseUp
 End Function
 
-Function utils.Input.MousePressed() As Byte TRUEENGINE2D_API_EXPORT
+Function utils.Input.MousePressed() As bool TRUEENGINE2D_API_EXPORT
 	Return m_mousePressed
 End Function
 
-Function utils.Input.MouseReleased() As Byte TRUEENGINE2D_API_EXPORT
+Function utils.Input.MouseReleased() As bool TRUEENGINE2D_API_EXPORT
 	Return m_mouseReleased
 End Function

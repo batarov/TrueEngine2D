@@ -20,21 +20,22 @@
 
 #Pragma Once
 
-Type Texture As irr_texture
+#Include "ReferenceCounted.bi"
 
-Type Graphic extends object
+Type Graphic extends ReferenceCounted
 	'
  	' If the graphic should update.
  	'
- 	active As Byte = 0
+ 	active As bool = false
+
+	'
+	' If the graphic should render.
+	'
+	visible as bool = true
  	
 	Declare Constructor ()
 	
 	Declare Virtual Destructor ()
-	
-	Declare Sub Load(byval path as zstring Ptr)
-	
-	Declare Sub Release()
 	
 	'
  	' Updates the graphic.
@@ -46,8 +47,5 @@ Type Graphic extends object
 	' @param		x		position to draw the graphic.
 	' @param		y		position to draw the graphic.
 	'
-	Declare Virtual Sub Render(ByVal x As Integer, ByVal y As Integer)
-	
-Public:
-	/' Internal '/ m_tex As Texture Ptr
+	Declare Virtual Sub Render(ByVal x As Integer, ByVal y As Integer)	
 End Type

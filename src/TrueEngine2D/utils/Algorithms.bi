@@ -18,17 +18,8 @@
 ''
 ''
 
-#Include "Graphic.bi"
-#Include "Config.bi"
+#Pragma Once
 
-Constructor Graphic() TRUEENGINE2D_API_EXPORT
-End Constructor
+Declare Sub Sort(a As Integer Ptr, length As Integer, ascending As Integer = -1)
 
-Destructor Graphic() TRUEENGINE2D_API_EXPORT
-End Destructor
-
-Sub Graphic.Update() TRUEENGINE2D_API_EXPORT
-End Sub
-
-Sub Graphic.Render(ByVal x As Integer, ByVal y As Integer) TRUEENGINE2D_API_EXPORT
-End Sub
+Declare Sub Quicksort(a As Integer Ptr, left_ As Integer, right_ As Integer, ascending As Integer)

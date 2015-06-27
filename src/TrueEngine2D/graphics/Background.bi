@@ -20,47 +20,35 @@
 
 #Pragma Once
 
-#Include "Graphic.bi"
+#Include "TrueEngine2D/Graphic.bi"
+#Include "TrueEngine2D/Texture.bi"
 
-Type Image extends Graphic
-	'
-	' Scale of the image, affects both x and y scale.
-	'
-	scale As Single = 1
+Type BackgroundImpl as BackgroundImpl_
 
-	'
-	' X scale of the image.
-	'
-	scaleX As Single = 1
+Type Background extends Graphic
+    Declare Constructor(ByVal tex As Texture Ptr)
+    Declare Destructor()
 	
-	'
-	' Y scale of the image.
-	'
-	scaleY As Single = 1
+    Declare Const Property width() As Integer
+    Declare Const Property height() As Integer
 	
-	'
-	' X origin of the image, determines transformation point.
-	' Defaults to top-left corner.
-	'
-	originX As Integer = 0
+    scaleX As Single = 1.0
+	scaleY As Single = 1.0
 	
-	' Y origin of the image, determines transformation point.
-	' Defaults to top-left corner.
-	'
-	originY As Integer = 0
+	htiled As Integer
+	vtiled As Integer
 	
-	Declare Constructor()
-	
-	Declare Virtual Sub Render(ByVal x As Integer, ByVal y As Integer)
-	
-	Declare Sub SetAlpha(flag as Byte)
+	hspeed As Single
+	vspeed As Single
 
-	Declare Sub SetWidth(w as Integer)
-
-	Declare Sub SetHeight(h as Integer)
-
-Protected:
-	m_width as Integer
-	m_height as Integer
-	m_alpha as Byte = 1
+Private:
+	Declare Sub Render(ByVal x As Integer, ByVal y As Integer) override
+	Declare Sub Update() override
+	
+Private:
+	m_width As Single
+	m_height As Single
+	m_x As Single
+	m_y As Single
+    m_impl as BackgroundImpl Ptr
 End Type

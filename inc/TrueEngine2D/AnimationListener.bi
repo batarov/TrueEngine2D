@@ -18,17 +18,12 @@
 ''
 ''
 
-#Include "Graphic.bi"
-#Include "Config.bi"
+#Pragma Once
 
-Constructor Graphic() TRUEENGINE2D_API_EXPORT
-End Constructor
+#Include "ReferenceCounted.bi"
 
-Destructor Graphic() TRUEENGINE2D_API_EXPORT
-End Destructor
+Type Animation_ as Animation
 
-Sub Graphic.Update() TRUEENGINE2D_API_EXPORT
-End Sub
-
-Sub Graphic.Render(ByVal x As Integer, ByVal y As Integer) TRUEENGINE2D_API_EXPORT
-End Sub
+Type AnimationListener extends ReferenceCounted
+    Declare Abstract Sub OnAnimationEnd(ByVal anim As Animation_ Ptr)
+End Type

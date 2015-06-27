@@ -20,17 +20,22 @@
 
 #pragma once
 
-type FontPrivatePtr as FontPrivate ptr
+#Include "ReferenceCounted.bi"
+#Include "Size.bi"
 
-type Font
-	declare constructor()
-	
-	declare destructor()
+Type FontPrivatePtr As FontPrivate Ptr
 
-	declare sub Load(byval path as zstring ptr)
+Type Font extends ReferenceCounted
+    Declare Constructor()
+    
+    Declare Destructor()
 
-	declare sub DrawText(byval x as integer, byval y as integer, byval width_ as integer, byval height_ as integer, byval text as wstring ptr)
+    Declare Function Load(ByVal path As ZString Ptr) As bool
 
-private:
-	m_d as FontPrivatePtr
-end type
+    Declare Sub DrawText(ByVal x As Integer, ByVal y As Integer, ByVal width_ As Integer, ByVal height_ as integer, ByRef text As Const WString)
+    
+    Declare Function GetSize(ByRef text As Const WString) As Size 
+
+Private:
+    m_d As FontPrivatePtr
+End Type

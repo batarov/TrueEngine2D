@@ -20,28 +20,30 @@
 
 #Pragma Once
 
+#Include "ReferenceCounted.bi"
+
 Type FSOUND_SAMPLEPtr As FSOUND_SAMPLE Ptr
 Type FSOUND_STREAMPtr As FSOUND_STREAM Ptr
 
-Type Sound extends object
-	Declare Constructor()
-	
-	Declare Destructor()
-	
-	Declare Function Load(ByVal Filename as String) As Byte
-	
-	Declare Sub Release()
-	
-	Declare Sub Play()
-	
-	Declare Sub setLoop(ByVal flag As Byte)
-	
+Type Sound extends ReferenceCounted
+    Declare Constructor()
+    
+    Declare Destructor()
+    
+    Declare Function Load(ByVal Filename as String) As Byte
+    
+    Declare Function Play(ByVal ch As Long = -1) As Long
+    
+    Declare Sub Stop(ByVal ch As Long)
+    
+    Declare Sub SetLoop(ByVal flag As Byte)
+    
 Private:
-	Static m_init As Byte
-	Union
-		m_sample As FSOUND_SAMPLEPtr
-		m_stream As FSOUND_STREAMPtr
-	End Union
-	m_loop As Byte
-	m_streaming As Byte = 0
+    Static m_init As Byte
+    Union
+        m_sample As FSOUND_SAMPLEPtr
+        m_stream As FSOUND_STREAMPtr
+    End Union
+    m_loop As Byte
+    m_streaming As Byte = 0
 End Type

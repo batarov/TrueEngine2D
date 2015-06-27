@@ -18,17 +18,17 @@
 ''
 ''
 
-#Include "Graphic.bi"
-#Include "Config.bi"
+#pragma once
 
-Constructor Graphic() TRUEENGINE2D_API_EXPORT
-End Constructor
+Type u32 As ULong
 
-Destructor Graphic() TRUEENGINE2D_API_EXPORT
-End Destructor
+Type s32 As Long
 
-Sub Graphic.Update() TRUEENGINE2D_API_EXPORT
-End Sub
+Type f32 As Single
 
-Sub Graphic.Render(ByVal x As Integer, ByVal y As Integer) TRUEENGINE2D_API_EXPORT
-End Sub
+type bool as integer
+
+const true as integer = -1
+const false as integer = 0
+
+const nullptr as integer = 0

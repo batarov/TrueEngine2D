@@ -18,33 +18,23 @@
 ''
 ''
 
-#Include "Image.bi"
-#include "Config.bi"
-#Include "Draw.bi"
+#Pragma Once
 
-Constructor Image() TRUEENGINE2D_API_EXPORT
-	base()
-	m_alpha = 1
-	m_width = -1
-	m_height = -1
-End Constructor
+#Include "ReferenceCounted.bi"
+#include "Size.bi"
 
-Sub Image.Render(ByVal x As Integer, ByVal y As Integer) TRUEENGINE2D_API_EXPORT
-	Var sx = scaleX * scale
-	Var sy = scaleY * scale
-	Dim xx As Integer = x - originX * sx
-	Dim yy As Integer = y - originY * sy
-	utils.Draw.Graphic(xx, yy, m_width * sx, m_height * sy, @This, 0, 0, m_width, m_height, m_alpha)
-End Sub
+Type Texture extends ReferenceCounted
+    Declare Constructor()
+    Declare Destructor()
+    Declare Function Load(ByRef path As Const String) As bool
+    Declare Const Function GetSize() as Size
+    Declare Operator Cast() as UInteger Ptr
 
-Sub Image.SetWidth(w as Integer) TRUEENGINE2D_API_EXPORT
-	m_width = w
-End Sub
+Private:
+    Declare Constructor(ByRef as Const Texture)
+    Declare Operator Let(ByRef as Const Texture)
 
-Sub Image.SetHeight(h as Integer) TRUEENGINE2D_API_EXPORT
-	m_height = h
-End Sub
-
-Sub Image.SetAlpha(flag as Byte) TRUEENGINE2D_API_EXPORT
-	m_alpha = flag
-End Sub
+Public:
+    /'internal'/ m_tex As UInteger Ptr
+    /'internal'/ m_size as Size
+End Type

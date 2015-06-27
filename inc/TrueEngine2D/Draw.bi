@@ -20,9 +20,34 @@
 #Pragma Once
 
 Type GraphicPtr As Graphic Ptr
+Type FontPtr as Font Ptr
 
 Namespace utils
-	Type Draw extends Object
-		Declare Static Sub Graphic(ByVal x As Integer, ByVal y As Integer, ByVal w As Integer, ByVal h As Integer, g As GraphicPtr, ByVal sx As Integer, ByVal sy As Integer, ByVal sw As Integer, ByVal sw As Integer, ByVal useAlpha As Byte = 1)
-	End Type
+    Enum
+        AlignLeft   =   1
+        AlignRight  =   2
+        AlignTop    =   3
+        AlignBottom =   4
+        AlignCenter =   5
+    End Enum
+    
+    Type Draw extends Object
+        Declare Static Sub Graphic(ByVal g As GraphicPtr, ByVal x As Integer = 0, ByVal y As Integer = 0)
+        Declare Static Sub SetAlpha(ByVal a As ULong)
+        Declare Static Sub SetColor(ByVal r As ULong, ByVal g As ULong, ByVal b As ULong)
+        Declare Static Sub SetColor(ByVal col As ULong)
+        Declare Static Sub SetHAlign(ByVal flag As Integer)
+        Declare Static Sub SetVAlign(ByVal flag As Integer)
+        Declare Static Sub SetFont(ByVal font As FontPtr)
+        Declare Static Sub Text(ByVal x As Integer, ByVal y As Integer, ByRef text_ As Const WString)
+        declare static sub RectColor(byval x1 as single, byval y1 as single, _
+                                     byval x2 as single, byval y2 as single, _
+                                     byval col1 as ulong, byval col2 as ulong, _
+                                     byval col3 as ulong, byval col4 as ulong)
+
+    Private:
+        Static m_font as FontPtr
+        Static m_halign as Integer
+        Static m_valign as Integer
+    End Type
 End Namespace

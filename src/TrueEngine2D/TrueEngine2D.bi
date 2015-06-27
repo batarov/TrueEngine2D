@@ -18,17 +18,15 @@
 ''
 ''
 
-#Include "Graphic.bi"
-#Include "Config.bi"
+#Pragma Once
 
-Constructor Graphic() TRUEENGINE2D_API_EXPORT
-End Constructor
+#inclib "TrueEngine2D"
 
-Destructor Graphic() TRUEENGINE2D_API_EXPORT
-End Destructor
+#include "Engine.bi"
+#include "World.bi"
+#include "Entity.bi"
+#include "Graphic.bi"
 
-Sub Graphic.Update() TRUEENGINE2D_API_EXPORT
-End Sub
-
-Sub Graphic.Render(ByVal x As Integer, ByVal y As Integer) TRUEENGINE2D_API_EXPORT
-End Sub
+#include "graphics/Background.bi"
+#include "graphics/Image.bi"
+#include "graphics/Animation.bi"

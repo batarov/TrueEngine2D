@@ -18,17 +18,28 @@
 ''
 ''
 
-#Include "Graphic.bi"
+#Include "ReferenceCounted.bi"
 #Include "Config.bi"
 
-Constructor Graphic() TRUEENGINE2D_API_EXPORT
+Constructor ReferenceCounted() TRUEENGINE2D_API_EXPORT
 End Constructor
 
-Destructor Graphic() TRUEENGINE2D_API_EXPORT
+Destructor ReferenceCounted() TRUEENGINE2D_API_EXPORT
 End Destructor
 
-Sub Graphic.Update() TRUEENGINE2D_API_EXPORT
+Const Sub ReferenceCounted.Grab() TRUEENGINE2D_API_EXPORT
+	*Cast(Integer Ptr, @m_referenceCounter) += 1
 End Sub
-
-Sub Graphic.Render(ByVal x As Integer, ByVal y As Integer) TRUEENGINE2D_API_EXPORT
-End Sub
+    
+Const Function ReferenceCounted.Drop() As bool TRUEENGINE2D_API_EXPORT
+	*Cast(Integer Ptr, @m_referenceCounter) -= 1 
+    If m_referenceCounter = 0 Then
+    	Delete Cast(ReferenceCounted Ptr, @this)
+    	Return true
+    End If    
+    Return false
+End Function
+    
+Const Function ReferenceCounted.GetReferenceCount() As Integer TRUEENGINE2D_API_EXPORT
+    Return m_referenceCounter
+End Function

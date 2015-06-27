@@ -20,13 +20,15 @@
 
 #Pragma Once
 
+#include "Types.bi"
+
 Type WorldPtr As World ptr
 
 Type Engine Extends Object
 	'
 	' If the game should stop updating/rendering.
 	'
-	paused As Byte = 0
+	paused As bool = false
 	
 	'
 	' The max amount of frames that can be skipped in fixed framerate mode.
@@ -69,15 +71,17 @@ Private:
 	
 Protected:
 	Declare Constructor ()
-	Declare Constructor (ByRef rhs As Engine)
 	m_width As UInteger
 	m_height As UInteger
 	m_frameRate As Single
 	m_world As WorldPtr
 	m_goto As WorldPtr
-	m_ShutdownRequested As Byte
+	m_shutdownRequested As bool = false
 	
 Private:
+   	Declare Constructor (ByRef As Const Engine)
+    Declare operator Let(ByRef As Const Engine)
+
 	' Timing information.
 	m_delta As Single = 0
 	m_time As Single

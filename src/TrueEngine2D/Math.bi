@@ -18,17 +18,8 @@
 ''
 ''
 
-#Include "Graphic.bi"
-#Include "Config.bi"
+#Pragma Once
 
-Constructor Graphic() TRUEENGINE2D_API_EXPORT
-End Constructor
-
-Destructor Graphic() TRUEENGINE2D_API_EXPORT
-End Destructor
-
-Sub Graphic.Update() TRUEENGINE2D_API_EXPORT
-End Sub
-
-Sub Graphic.Render(ByVal x As Integer, ByVal y As Integer) TRUEENGINE2D_API_EXPORT
-End Sub
+Const PI As Single = 3.14159265359
+Const degtorad As Single = PI / 180
+Const radtodeg As Single = 180 / PI

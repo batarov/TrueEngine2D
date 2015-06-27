@@ -18,19 +18,10 @@
 ''
 ''
 
-#Pragma Once
+#pragma once
 
-#Include "Graphic.bi"
-
-Type Background extends Graphic
-	Declare Sub DrawImage(ByVal x As Integer, ByVal y As Integer)
-
-	Declare Sub setWidth(ByVal w As Integer)
-
-	Declare Sub setHeight(ByVal h As Integer)
-	
-	Declare Sub Render(ByVal x As Integer, ByVal y As Integer)
-
-Private:
-	As Integer m_width, m_height
-End Type
+#ifdef TRUEENGINE2D_STATIC
+  #define TRUEENGINE2D_API_EXPORT
+#else
+  #define TRUEENGINE2D_API_EXPORT export
+#endif

@@ -20,17 +20,13 @@
 
 #Pragma Once
 
-#Include "Graphic.bi"
+#inclib "TrueEngine2D"
 
-Type Background extends Graphic
-	Declare Sub DrawImage(ByVal x As Integer, ByVal y As Integer)
+#include "Engine.bi"
+#include "World.bi"
+#include "Entity.bi"
+#include "Graphic.bi"
 
-	Declare Sub setWidth(ByVal w As Integer)
-
-	Declare Sub setHeight(ByVal h As Integer)
-	
-	Declare Sub Render(ByVal x As Integer, ByVal y As Integer)
-
-Private:
-	As Integer m_width, m_height
-End Type
+#include "graphics/Background.bi"
+#include "graphics/Image.bi"
+#include "graphics/Animation.bi"

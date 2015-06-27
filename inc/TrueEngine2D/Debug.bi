@@ -17,18 +17,10 @@
 '' along with TrueEngine2D.  If not, see <http://www.gnu.org/licenses/>.
 ''
 ''
+#Pragma Once
 
-#Include "Graphic.bi"
-#Include "Config.bi"
-
-Constructor Graphic() TRUEENGINE2D_API_EXPORT
-End Constructor
-
-Destructor Graphic() TRUEENGINE2D_API_EXPORT
-End Destructor
-
-Sub Graphic.Update() TRUEENGINE2D_API_EXPORT
-End Sub
-
-Sub Graphic.Render(ByVal x As Integer, ByVal y As Integer) TRUEENGINE2D_API_EXPORT
-End Sub
+#If __FB_DEBUG__ <> 0
+	#Define DPRINT(msg) Print msg & " (" & __FILE__ & ":" & __LINE__ & ", " & __FUNCTION__ & ")"
+#Else
+	#Define DPRINT(msg)
+#EndIf

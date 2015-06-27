@@ -18,17 +18,21 @@
 ''
 ''
 
-#Include "Graphic.bi"
-#Include "Config.bi"
+#Pragma Once
 
-Constructor Graphic() TRUEENGINE2D_API_EXPORT
-End Constructor
+#include "Types.bi"
 
-Destructor Graphic() TRUEENGINE2D_API_EXPORT
-End Destructor
+Type ReferenceCounted extends Object
+    Declare Constructor()
 
-Sub Graphic.Update() TRUEENGINE2D_API_EXPORT
-End Sub
-
-Sub Graphic.Render(ByVal x As Integer, ByVal y As Integer) TRUEENGINE2D_API_EXPORT
-End Sub
+    Declare virtual Destructor()
+    
+    Declare Const Sub Grab()
+    
+    Declare Const Function Drop() As bool
+    
+    Declare Const Function GetReferenceCount() As Integer
+    
+Private:
+    m_referenceCounter As Integer = 1
+End Type
