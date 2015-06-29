@@ -125,6 +125,11 @@ Sub World.SetBackgroundVSpeed(ByVal vspeed As Single) TRUEENGINE2D_API_EXPORT
     m_bg.vspeed = vspeed
 End Sub
 
+Sub World.SetBackgroundScrollSpeed(ByVal hspeed As Single, ByVal vspeed As Single) TRUEENGINE2D_API_EXPORT
+    m_bg.bg->hspeed = hspeed
+    m_bg.bg->vspeed = vspeed
+End Sub
+
 Sub World.BeginWorld() TRUEENGINE2D_API_EXPORT
 End Sub
 

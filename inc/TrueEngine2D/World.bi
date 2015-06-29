@@ -132,6 +132,8 @@ Type World extends ReferenceCounted
     Declare Sub SetBackgroundHSpeed(ByVal hspeed As Single)
     
     Declare Sub SetBackgroundVSpeed(ByVal vspeed As Single)
+
+    Declare Sub SetBackgroundScrollSpeed(ByVal hspeed As Single, ByVal vspeed As Single)
     
     ' Removes Entity from the render list.
     Declare Sub RemoveRender(ByVal e As EntityPtr)
