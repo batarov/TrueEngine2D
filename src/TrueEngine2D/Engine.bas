@@ -151,9 +151,10 @@ Sub Engine.CheckWorld() TRUEENGINE2D_API_EXPORT
 End Sub
 
 Function Engine.AddWorld(world As World Ptr) as WorldPtr TRUEENGINE2D_API_EXPORT
-	m_goto = world
-    world->Grab() 
-	return world
+    if world = m_world then return world
+    m_goto = world
+    world->Grab()
+    return world
 End Function
 
 Function Engine.GetInstance() As Engine Ptr TRUEENGINE2D_API_EXPORT
